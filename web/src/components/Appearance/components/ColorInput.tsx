@@ -15,49 +15,46 @@ interface ButtonProps {
 
 const Container = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
-  > span {
-    width: 100%;
-
-    display: flex;
-    justify-content: space-between;
-    font-weight: 200;
+  > .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
   }
 
-  > div {
-    width: 100%;
-
+  > .swatches {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    margin-top: 10px;
+    gap: 5px;
   }
 `;
 
 const Button = styled.button<ButtonProps>`
-  height: 20px;
-  width: 20px;
-
-  border: 2px solid rgba(0, 0, 0, 0.2);
-
-  margin: 1px;
+  height: 22px;
+  width: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.15s ease;
 
   &:hover {
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    ${props => props.theme.smoothBackgroundTransition ? 'transition: background 0.2s;' : ''}
-    ${props => props.theme.scaleOnHover ? 'transform: scale(1.1);' : ''}
+    border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.8);
+    transform: scale(1.1);
   }
 
   ${({ selected }) =>
     selected &&
     css`
-      border: 2px solid rgba(255, 255, 255, 1);
+      border: 2px solid rgba(${props => props.theme.accentColor || '227, 32, 59'}, 1);
+      box-shadow: 0 0 0 1px rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.3);
     `}
 `;
 
-const ColorInput: React.FC<ColorInputProps> = ({ title, colors = [], defaultValue, clientValue, onChange }) => {
+const ColorInput: React.FC<ColorInputProps> = ({ title, colors = [], defaultValue, onChange }) => {
   const selectColor = useCallback(
     (color: number) => {
       onChange(color);
@@ -67,11 +64,8 @@ const ColorInput: React.FC<ColorInputProps> = ({ title, colors = [], defaultValu
 
   return (
     <Container>
-      <span>
-        <small>{`${title}: ${defaultValue}`}</small>
-        <small>{clientValue}</small>
-      </span>
-      <div>
+      <span className="label">{title}</span>
+      <div className="swatches">
         {colors.map((color, index) => (
           <Button
             key={index}

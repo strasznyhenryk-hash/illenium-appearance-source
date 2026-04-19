@@ -3,48 +3,209 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  position: relative;
   overflow: hidden;
 `;
 
-export const Container = styled.div`
-  height: 100%;
-  width: 20%;
-  max-width: 400px;
+export const Header = styled.div`
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 5;
+  color: #fff;
+  user-select: none;
+
+  h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  h1 .accent {
+    color: rgb(${props => props.theme.accentColor || '227, 32, 59'});
+    display: block;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 220px;
+    letter-spacing: 0.3px;
+  }
+`;
+
+export const LeftNav = styled.nav`
+  position: absolute;
+  left: 40px;
+  top: 180px;
+  bottom: 110px;
+  width: 220px;
+  z-index: 5;
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  gap: 6px;
 
-  padding: 40px 10px;
+  overflow-y: auto;
 
-  background: linear-gradient(
-    to right,
-    rgba(${props => props.theme.secondaryBackground || '0, 0, 0'}, 0.8),
-    rgba(${props => props.theme.secondaryBackground || '0, 0, 0'}, 0)
-  );
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+`;
 
-  overflow-y: scroll;
+interface NavItemProps {
+  active: boolean;
+}
 
-  ::-webkit-scrollbar {
-    width: 0px;
+export const NavItem = styled.button<NavItemProps>`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 50px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: ${({ active }) => (active ? '#fff' : 'rgba(255, 255, 255, 0.55)')};
+  font-size: 14px;
+  font-weight: ${({ active }) => (active ? 600 : 500)};
+  letter-spacing: 0.4px;
+  transition: all 0.2s ease;
+  border-radius: ${props => props.theme.borderRadius || '6px'};
+  text-align: left;
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${({ active }) =>
+      active
+        ? `rgba(${'227, 32, 59'}, 0.18)`
+        : 'rgba(30, 30, 32, 0.7)'};
+    color: ${({ active }) =>
+      active ? `rgb(${'227, 32, 59'})` : 'rgba(255, 255, 255, 0.75)'};
+    border-radius: ${props => props.theme.borderRadius || '6px'};
+    transition: all 0.2s ease;
+    border: 1px solid
+      ${({ active }) =>
+        active
+          ? `rgba(${'227, 32, 59'}, 0.5)`
+          : 'rgba(255, 255, 255, 0.06)'};
   }
 
-  ::-webkit-scrollbar-track {
-    background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 0.2);
+  &:hover {
+    color: #fff;
+    .icon {
+      color: #fff;
+      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.22);
+      border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.5);
+    }
+  }
+`;
+
+export const RightPanel = styled.aside`
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  bottom: 40px;
+  width: 360px;
+  z-index: 4;
+
+  display: flex;
+  flex-direction: column;
+
+  color: #fff;
+`;
+
+export const PanelHeader = styled.div`
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 0 4px 12px 4px;
+  text-transform: capitalize;
+`;
+
+export const PanelBody = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const IconRail = styled.div`
+  position: absolute;
+  right: 420px;
+  top: 40px;
+  z-index: 4;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const Footer = styled.div`
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  bottom: 24px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+
+  .help {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 0.2);
-    border-radius: 3vh;
+  .help-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 0.2);
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .brand {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.5px;
+  }
+
+  .brand .accent {
+    color: rgb(${props => props.theme.accentColor || '227, 32, 59'});
+    font-weight: 700;
   }
 `;
 
@@ -52,10 +213,11 @@ export const FlexWrapper = styled.div`
   width: 100%;
 
   display: flex;
+  gap: 10px;
 
   > div {
-    & + div {
-      margin-left: 10px;
-    }
+    flex: 1;
   }
 `;
+
+export const Container = styled.div``;

@@ -13,26 +13,47 @@ interface RangeInputProps {
 
 const Container = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  > span {
-    width: 100%;
+  height: 40px;
+  padding: 0 12px;
 
-    display: flex;
-    justify-content: space-between;
-    font-weight: 200;
+  background: rgba(30, 30, 32, 0.6);
+  border-radius: ${props => props.theme.borderRadius || '6px'};
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.4);
   }
 
-  > div {
+  > .label {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+  }
+
+  > .slider {
+    position: relative;
+    flex: 1;
     display: flex;
     align-items: center;
 
-    position: relative;
-
-    margin-top: 10px;
-
-    > small {
-      font-weight: 200;
-      font-size: 8px;
+    &::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.25);
+      border: 1px solid rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.5);
     }
   }
 
@@ -40,22 +61,29 @@ const Container = styled.div`
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 15px;
-    background: rgba(${props => props.theme.secondayBackground || '0, 0, 0'}, 0.8);
-    outline: none;
-    opacity: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 2px;
-    margin: 0 10px;
+    outline: none;
+    padding: 0;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
   }
 
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 17px;
-    height: 17px;
-    background: #eeeeee;
+    width: 14px;
+    height: 14px;
+    margin-top: -5px;
+    background: rgb(${props => props.theme.accentColor || '227, 32, 59'});
+    border-radius: 50%;
     cursor: pointer;
-    border-radius: 2px;
+    box-shadow: 0 0 0 3px rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.25);
   }
 `;
 
@@ -65,35 +93,22 @@ const RangeInput: React.FC<RangeInputProps> = ({
   factor = 1,
   title,
   defaultValue = 1,
-  clientValue,
   onChange,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleContainerClick = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef]);
-
   const handleChange = useCallback(
     (e: { target: { value: string } }) => {
-      const parsedValue = parseFloat(e.target.value);
-      onChange(parsedValue);
+      const parsed = parseFloat(e.target.value);
+      onChange(parsed);
     },
     [onChange],
   );
 
   return (
-    <Container onClick={handleContainerClick}>
-      <span>
-        <small>
-          {title}: {defaultValue}
-        </small>
-        <small>{clientValue}</small>
-      </span>
-      <div>
-        <small>{min}</small>
+    <Container>
+      <span className="label">{title}</span>
+      <div className="slider">
         <input
           type="range"
           ref={inputRef}
@@ -103,7 +118,6 @@ const RangeInput: React.FC<RangeInputProps> = ({
           step={factor}
           onChange={handleChange}
         />
-        <small>{max}</small>
       </div>
     </Container>
   );

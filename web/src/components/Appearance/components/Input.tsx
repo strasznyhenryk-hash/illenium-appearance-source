@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { valueContainerCSS } from 'react-select/src/components/containers';
 
 interface InputProps {
   title?: string;
@@ -17,68 +16,68 @@ const Container = styled.div`
   min-width: 0;
 
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 
-  margin-top: ${({ title }) => (title ? '5px' : '0')};
+  height: 40px;
+  padding: 0 4px 0 10px;
 
-  > span {
-    width: 100%;
+  background: rgba(30, 30, 32, 0.6);
+  border-radius: ${props => props.theme.borderRadius || '6px'};
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
-    display: flex;
-    justify-content: space-between;
-    font-weight: 200;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.4);
   }
 
-  > div {
+  > .label {
+    flex: 1;
     min-width: 0;
-    height: 30px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
+  > .controls {
     display: flex;
     align-items: center;
-
-    margin-top: 10px;
+    gap: 4px;
+    height: 100%;
 
     button {
-      height: 100%;
-      min-width: 30px;
-
+      height: 32px;
+      width: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      color: rgba(${props => props.theme.fontColor || '255, 255, 255'}, 1);
-
-      outline: 0;
-      border: none;
-      border-radius: 2px;
-
-      background: rgba(23, 23, 23, 0.5);
+      color: rgba(255, 255, 255, 0.75);
+      border: 0;
+      background: transparent;
+      border-radius: 4px;
+      transition: all 0.15s ease;
 
       &:hover {
-        color: rgba(${props => props.theme.fontColorHover || '255, 255, 255'}, 1);
-        background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 0.9);
-        ${props => props.theme.smoothBackgroundTransition ? 'transition: background 0.2s;' : ''}
-        ${props => props.theme.scaleOnHover ? 'transform: scale(1.1);' : ''}
+        color: rgb(${props => props.theme.accentColor || '227, 32, 59'});
+        background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.1);
       }
     }
 
     input {
-      min-width: 0;
-      height: 100%;
-
-      flex-grow: 1;
-      flex-shrink: 1;
-
+      height: 32px;
+      min-width: 40px;
+      max-width: 50px;
       text-align: center;
-      font-size: 14px;
-      color: rgba(${props => props.theme.fontColor || '255, 255, 255'}, 1);
-
-      border: none;
-      border-radius: 2px;
-      margin: 0 2px;
-
-      background: rgba(${props => props.theme.secondaryBackground || '0, 0, 0'}, 0.8);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      border: 0;
+      background: transparent;
 
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
@@ -89,91 +88,70 @@ const Container = styled.div`
   }
 `;
 
-const Input: React.FC<InputProps> = ({ title, min = 0, max = 255, blacklisted = [], defaultValue, clientValue, onChange }) => {
+const Input: React.FC<InputProps> = ({
+  title,
+  min = 0,
+  max = 255,
+  blacklisted = [],
+  defaultValue,
+  onChange,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleContainerClick = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef]);
+  const isBlacklisted = (value: number, list: number[]) => list.indexOf(value) !== -1;
 
-  const isBlacklisted = function (_value: number, blacklisted: number[]) {
-    for (var i = 0; i < blacklisted.length; i++) {
-      if (blacklisted[i] == _value) {
-        return true
-      }
-    }
-    return false
-  }
+  const normalize = (value: number) => {
+    if (value < min) return max;
+    if (value > max) return min;
+    return value;
+  };
 
-  const normalize = function (_value: number) {
-    if (_value < min) {
-      _value = max;
-    } else if (_value > max) {
-      _value = min;
+  const checkBlacklisted = (value: number, list: number[], factor: number) => {
+    if (factor === 0) {
+      if (!isBlacklisted(value, list)) return normalize(value);
+      factor = value > defaultValue ? 1 : -1;
     }
 
-    return _value;
-  }
-
-  const checkBlacklisted = function (_value: number, blacklisted: number[], factor: number) {
-    if(factor === 0) {
-      if(!isBlacklisted(_value, blacklisted)) {
-        return normalize(_value);
-      }
-      factor = _value > defaultValue ? 1 : -1;
-    }
-
+    let next = value;
     do {
-      _value = normalize(_value + factor);
-    } while (isBlacklisted(_value, blacklisted))
-    return _value;
+      next = normalize(next + factor);
+    } while (isBlacklisted(next, list));
+    return next;
   };
 
   const getSafeValue = useCallback(
-    (_value: number, factor: number) => {
-      let safeValue = _value;
-
-      return checkBlacklisted(safeValue, blacklisted, factor);
-    },
-    [min, max, blacklisted],
+    (value: number, factor: number) => checkBlacklisted(value, blacklisted, factor),
+    [min, max, blacklisted, defaultValue],
   );
 
   const handleChange = useCallback(
-    (_value: any, factor: number) => {
-      let parsedValue;
+    (value: any, factor: number) => {
+      if (value === null || value === undefined || value === '') return;
+      if (Number.isNaN(value)) return;
 
-      if (!_value && _value !== 0) return;
+      const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
+      if (Number.isNaN(parsed)) return;
 
-      if (Number.isNaN(_value)) return;
-
-      if (typeof _value === 'string') {
-        parsedValue = parseInt(_value);
-      } else {
-        parsedValue = _value;
-      }
-
-      const safeValue = getSafeValue(parsedValue, factor);
-
-      onChange(safeValue);
+      onChange(getSafeValue(parsed, factor));
     },
     [getSafeValue, onChange],
   );
 
   return (
-    <Container onClick={handleContainerClick}>
-      <span>
-        <small>{title}</small>
-        <small>{clientValue} / {max}</small>
-      </span>
-      <div>
+    <Container>
+      <span className="label">{title}</span>
+      <div className="controls">
         <button type="button" onClick={() => handleChange(defaultValue, -1)}>
-          <FiChevronLeft strokeWidth={5} />
+          <FiChevronLeft strokeWidth={3} size={16} />
         </button>
-        <input type="number" ref={inputRef} value={defaultValue} onChange={e => handleChange(e.target.value, 0)} />
+        <input
+          type="number"
+          ref={inputRef}
+          value={defaultValue}
+          onChange={e => handleChange(e.target.value, 0)}
+        />
         <button type="button" onClick={() => handleChange(defaultValue, 1)}>
-          <FiChevronRight strokeWidth={5} />
+          <FiChevronRight strokeWidth={3} size={16} />
         </button>
       </div>
     </Container>

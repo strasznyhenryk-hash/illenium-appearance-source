@@ -15,54 +15,64 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  gap: 6px;
 
-  > span {
-    width: 100%;
-
-    display: flex;
-    justify-content: space-between;
-    font-weight: 200;
+  > .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
   }
 `;
 
 const customStyles: any = {
   control: (styles: any) => ({
     ...styles,
-    marginTop: '10px',
-    background: 'rgba(23, 23, 23, 0.8)',
-    fontSize: '14px',
+    background: 'rgba(30, 30, 32, 0.8)',
+    fontSize: '13px',
     color: '#fff',
-    border: 'none',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     outline: 'none',
     boxShadow: 'none',
+    borderRadius: '6px',
+    minHeight: '40px',
+    '&:hover': {
+      borderColor: 'rgba(227, 32, 59, 0.5)',
+    },
   }),
   placeholder: (styles: any) => ({
     ...styles,
-    fontSize: '14px',
-    color: '#fff',
+    fontSize: '13px',
+    color: 'rgba(255, 255, 255, 0.6)',
   }),
   input: (styles: any) => ({
     ...styles,
-    fontSize: '14px',
+    fontSize: '13px',
     color: '#fff',
   }),
   singleValue: (styles: any) => ({
     ...styles,
-    fontSize: '14px',
+    fontSize: '13px',
     color: '#fff',
-    border: 'none',
-    outline: 'none',
+    fontWeight: 500,
+  }),
+  indicatorsContainer: (styles: any) => ({
+    ...styles,
+    color: '#fff',
   }),
   indicatorContainer: (styles: any) => ({
     ...styles,
-    borderColor: '#fff',
     color: '#fff',
   }),
   dropdownIndicator: (styles: any) => ({
     ...styles,
-    borderColor: '#fff',
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 0.5)',
+    '&:hover': { color: '#fff' },
+  }),
+  indicatorSeparator: (styles: any) => ({
+    ...styles,
+    background: 'rgba(255, 255, 255, 0.08)',
   }),
   menuPortal: (styles: any) => ({
     ...styles,
@@ -71,37 +81,42 @@ const customStyles: any = {
   }),
   menu: (styles: any) => ({
     ...styles,
-    background: 'rgba(23, 23, 23, 0.8)',
-    position: 'absolute',
-    marginBottom: '10px',
-    borderRadius: '4px',
+    background: 'rgba(18, 18, 20, 0.98)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '6px',
+    overflow: 'hidden',
   }),
   menuList: (styles: any) => ({
     ...styles,
-    background: 'rgba(23, 23, 23, 0.8)',
-    borderRadius: '4px',
+    background: 'transparent',
+    padding: '4px',
     '&::-webkit-scrollbar': {
-      width: '10px',
+      width: '6px',
     },
     '&::-webkit-scrollbar-track': {
-      background: 'none',
+      background: 'transparent',
     },
     '&::-webkit-scrollbar-thumb': {
-      borderRadius: '4px',
-      background: '#fff',
+      borderRadius: '3px',
+      background: 'rgba(227, 32, 59, 0.4)',
     },
   }),
-  option: (styles: any, { isFocused }: any) => ({
+  option: (styles: any, { isFocused, isSelected }: any) => ({
     ...styles,
     borderRadius: '4px',
-    width: '97%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    background: isFocused ? 'rgba(255, 255, 255, 0.1)' : 'none',
+    fontSize: '13px',
+    padding: '8px 10px',
+    color: isSelected ? '#fff' : 'rgba(255, 255, 255, 0.8)',
+    background: isSelected
+      ? 'rgba(227, 32, 59, 0.8)'
+      : isFocused
+      ? 'rgba(255, 255, 255, 0.06)'
+      : 'transparent',
+    cursor: 'pointer',
   }),
 };
 
-const SelectInput = ({ title, items, defaultValue, clientValue, onChange }: SelectInputProps) => {
+const SelectInput = ({ title, items, defaultValue, onChange }: SelectInputProps) => {
   const selectRef = useRef<any>(null);
 
   const handleChange = (event: any, { action }: any): void => {
@@ -112,24 +127,20 @@ const SelectInput = ({ title, items, defaultValue, clientValue, onChange }: Sele
 
   const onMenuOpen = () => {
     setTimeout(() => {
-      const selectedEl = document.getElementsByClassName("Select" + title + "__option--is-selected")[0];
+      const selectedEl = document.getElementsByClassName(
+        'Select' + title + '__option--is-selected',
+      )[0];
       if (selectedEl) {
         selectedEl.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' });
       }
     }, 100);
   };
 
-  const themeContext = useContext(ThemeContext);
-  customStyles.control.background = `rgba(${themeContext.secondaryBackground || '0, 0, 0'}, 0.8)`;
-  customStyles.menu.background = `rgba(${themeContext.secondaryBackground || '0, 0, 0'}, 0.8)`;
-  customStyles.menuList.background = `rgba(${themeContext.secondaryBackground || '0, 0, 0'}, 0.8)`;
+  useContext(ThemeContext);
 
   return (
     <Container>
-      <span>
-        <small>{title}</small>
-        <small>{clientValue}</small>
-      </span>
+      <span className="label">{title}</span>
       <Select
         ref={selectRef}
         styles={customStyles}
@@ -137,8 +148,8 @@ const SelectInput = ({ title, items, defaultValue, clientValue, onChange }: Sele
         value={{ value: defaultValue, label: defaultValue }}
         onChange={handleChange}
         onMenuOpen={onMenuOpen}
-        className={"Select" + title}
-        classNamePrefix={"Select" + title}
+        className={'Select' + title}
+        classNamePrefix={'Select' + title}
         menuPortalTarget={document.body}
       />
     </Container>

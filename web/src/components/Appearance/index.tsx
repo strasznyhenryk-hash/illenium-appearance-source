@@ -36,9 +36,28 @@ import Props from './Props';
 import Options from './Options';
 import Modal from '../Modal';
 import Tattoos from './Tattoos';
+import Gender from './Gender';
 
-import { Wrapper, Container } from './styles';
-import { ThemeContext } from 'styled-components';
+import {
+  FaUserAlt,
+  FaDna,
+  FaSmile,
+  FaTshirt,
+  FaGlasses,
+  FaPaintBrush,
+} from 'react-icons/fa';
+import { GiComb } from 'react-icons/gi';
+
+import {
+  Wrapper,
+  Header,
+  LeftNav,
+  NavItem,
+  RightPanel,
+  PanelBody,
+  IconRail,
+  Footer,
+} from './styles';
 
 if (!import.meta.env.PROD) {
   mock('appearance_get_settings', () => ({
@@ -83,6 +102,8 @@ const Appearance = () => {
 
   const [saveModal, setSaveModal] = useState(false);
   const [exitModal, setExitModal] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<string>('ped');
 
   const { display, setDisplay, locales, setLocales } = useNuiState();
 
@@ -546,6 +567,41 @@ const Appearance = () => {
     return null;
   }
 
+  const tabs = [
+    { id: 'ped', label: 'Ped', icon: <FaUserAlt size={16} />, enabled: config.ped },
+    {
+      id: 'dna',
+      label: 'DNA',
+      icon: <FaDna size={18} />,
+      enabled: isPedFreemodeModel && config.headBlend,
+    },
+    {
+      id: 'face',
+      label: 'Face',
+      icon: <FaSmile size={18} />,
+      enabled: isPedFreemodeModel && config.faceFeatures,
+    },
+    { id: 'hair', label: 'Hair', icon: <GiComb size={18} />, enabled: config.headOverlays },
+    { id: 'clothes', label: 'Clothes', icon: <FaTshirt size={16} />, enabled: config.components },
+    { id: 'accessories', label: 'Accessories', icon: <FaGlasses size={18} />, enabled: config.props },
+    {
+      id: 'tattoos',
+      label: 'Tattoos',
+      icon: <FaPaintBrush size={16} />,
+      enabled: isPedFreemodeModel && config.tattoos,
+    },
+  ];
+
+  const visibleTabs = tabs.filter(t => t.enabled);
+  const currentTab = visibleTabs.find(t => t.id === activeTab)?.id ?? visibleTabs[0]?.id ?? 'ped';
+
+  const handleGenderChange = (male: boolean) => {
+    const newModel = male ? 'mp_m_freemode_01' : 'mp_f_freemode_01';
+    if (data && newModel !== data.model) {
+      handleModelChange(newModel);
+    }
+  };
+
   return (
     <>
       {wrapperTransition.map(
@@ -553,110 +609,164 @@ const Appearance = () => {
           item && (
             <animated.div key={key} style={style}>
               <Wrapper>
-                <Container>
-                  {config.ped && (
-                    <Ped
-                      settings={appearanceSettings.ped}
-                      storedData={storedData.model}
-                      data={data.model}
-                      handleModelChange={handleModelChange}
-                    />
-                  )}
-                  {appearanceSettings && (
-                    <>
-                      {isPedFreemodeModel && config.headBlend && (
+                <Header>
+                  <h1>
+                    CHARACTER
+                    <span className="accent">CREATION</span>
+                  </h1>
+                  <p>Customize your character. Use the menu to navigate through the options.</p>
+                </Header>
+
+                <LeftNav>
+                  {visibleTabs.map(t => (
+                    <NavItem
+                      key={t.id}
+                      active={t.id === currentTab}
+                      onClick={() => setActiveTab(t.id)}
+                      type="button"
+                    >
+                      <span className="icon">{t.icon}</span>
+                      <span>{t.label}</span>
+                    </NavItem>
+                  ))}
+                </LeftNav>
+
+                <IconRail>
+                  <Options
+                    camera={camera}
+                    rotate={rotate}
+                    clothes={clothes}
+                    handleSetClothes={handleSetClothes}
+                    handleSetCamera={handleSetCamera}
+                    handleTurnAround={handleTurnAround}
+                    handleRotateLeft={handleRotateLeft}
+                    handleRotateRight={handleRotateRight}
+                    handleSave={handleSaveModal}
+                    handleExit={handleExitModal}
+                    enableExit={config.enableExit}
+                  />
+                </IconRail>
+
+                <RightPanel>
+                  <PanelBody>
+                    {currentTab === 'ped' && config.ped && (
+                      <Ped
+                        settings={appearanceSettings.ped}
+                        storedData={storedData.model}
+                        data={data.model}
+                        handleModelChange={handleModelChange}
+                      />
+                    )}
+
+                    {currentTab === 'dna' && isPedFreemodeModel && config.headBlend && (
+                      <>
+                        <Gender isMale={!!isPedMale} onChange={handleGenderChange} />
                         <HeadBlend
                           settings={appearanceSettings.headBlend}
                           storedData={storedData.headBlend}
                           data={data.headBlend}
                           handleHeadBlendChange={handleHeadBlendChange}
                         />
-                      )}
-                      {isPedFreemodeModel && config.faceFeatures && (
-                        <FaceFeatures
-                          settings={appearanceSettings.faceFeatures}
-                          storedData={storedData.faceFeatures}
-                          data={data.faceFeatures}
-                          handleFaceFeatureChange={handleFaceFeatureChange}
-                        />
-                      )}
-                      {config.headOverlays && (
-                        <HeadOverlays
-                          settings={{
-                            hair: appearanceSettings.hair,
-                            headOverlays: appearanceSettings.headOverlays,
-                            eyeColor: appearanceSettings.eyeColor,
-                            fade: appearanceSettings.tattoos.items['ZONE_HAIR']
-                          }}
-                          storedData={{
-                            hair: storedData.hair,
-                            headOverlays: storedData.headOverlays,
-                            eyeColor: storedData.eyeColor,
-                            fade: storedData.tattoos?.ZONE_HAIR?.length > 0 ? storedData.tattoos.ZONE_HAIR[0] : null
-                          }}
-                          data={{
-                            hair: data.hair,
-                            headOverlays: data.headOverlays,
-                            eyeColor: data.eyeColor,
-                            fade: data.tattoos?.ZONE_HAIR?.length > 0 ? data.tattoos.ZONE_HAIR[0] : null
-                          }}
-                          isPedFreemodeModel={isPedFreemodeModel}
-                          handleHairChange={handleHairChange}
-                          handleHeadOverlayChange={handleHeadOverlayChange}
-                          handleEyeColorChange={handleEyeColorChange}
-                          handleChangeFade={handleChangeFade}
-                          automaticFade={config.automaticFade}
-                        />
-                      )}
-                    </>
-                  )}
-                  {config.components && (
-                    <Components
-                      settings={appearanceSettings.components}
-                      data={data.components}
-                      storedData={storedData.components}
-                      handleComponentDrawableChange={handleComponentDrawableChange}
-                      handleComponentTextureChange={handleComponentTextureChange}
-                      componentConfig={config.componentConfig}
-                      hasTracker={config.hasTracker}
-                      isPedFreemodeModel={isPedFreemodeModel}
-                    />
-                  )}
-                  {config.props && (
-                    <Props
-                      settings={appearanceSettings.props}
-                      data={data.props}
-                      storedData={storedData.props}
-                      handlePropDrawableChange={handlePropDrawableChange}
-                      handlePropTextureChange={handlePropTextureChange}
-                      propConfig={config.propConfig}
-                    />
-                  )}
-                  {isPedFreemodeModel && config.tattoos && (
-                    <Tattoos
-                      settings={filterTattoos(appearanceSettings.tattoos)}
-                      data={data.tattoos}
-                      storedData={storedData.tattoos}
-                      handleApplyTattoo={handleApplyTattoo}
-                      handlePreviewTattoo={handlePreviewTattoo}
-                      handleDeleteTattoo={handleDeleteTattoo}
-                      handleClearTattoos={handleClearTattoos}
-                    />
-                  )}
-                </Container>
-                <Options
-                  camera={camera}
-                  rotate={rotate}
-                  clothes={clothes}
-                  handleSetClothes={handleSetClothes}
-                  handleSetCamera={handleSetCamera}
-                  handleTurnAround={handleTurnAround}
-                  handleRotateLeft={handleRotateLeft}
-                  handleRotateRight={handleRotateRight}
-                  handleSave={handleSaveModal}
-                  handleExit={handleExitModal}
-                  enableExit={config.enableExit}
-                />
+                      </>
+                    )}
+
+                    {currentTab === 'face' && isPedFreemodeModel && config.faceFeatures && (
+                      <FaceFeatures
+                        settings={appearanceSettings.faceFeatures}
+                        storedData={storedData.faceFeatures}
+                        data={data.faceFeatures}
+                        handleFaceFeatureChange={handleFaceFeatureChange}
+                      />
+                    )}
+
+                    {currentTab === 'hair' && config.headOverlays && (
+                      <HeadOverlays
+                        settings={{
+                          hair: appearanceSettings.hair,
+                          headOverlays: appearanceSettings.headOverlays,
+                          eyeColor: appearanceSettings.eyeColor,
+                          fade: appearanceSettings.tattoos.items['ZONE_HAIR'],
+                        }}
+                        storedData={{
+                          hair: storedData.hair,
+                          headOverlays: storedData.headOverlays,
+                          eyeColor: storedData.eyeColor,
+                          fade:
+                            storedData.tattoos?.ZONE_HAIR?.length > 0
+                              ? storedData.tattoos.ZONE_HAIR[0]
+                              : null,
+                        }}
+                        data={{
+                          hair: data.hair,
+                          headOverlays: data.headOverlays,
+                          eyeColor: data.eyeColor,
+                          fade:
+                            data.tattoos?.ZONE_HAIR?.length > 0
+                              ? data.tattoos.ZONE_HAIR[0]
+                              : null,
+                        }}
+                        isPedFreemodeModel={isPedFreemodeModel}
+                        handleHairChange={handleHairChange}
+                        handleHeadOverlayChange={handleHeadOverlayChange}
+                        handleEyeColorChange={handleEyeColorChange}
+                        handleChangeFade={handleChangeFade}
+                        automaticFade={config.automaticFade}
+                      />
+                    )}
+
+                    {currentTab === 'clothes' && config.components && (
+                      <Components
+                        settings={appearanceSettings.components}
+                        data={data.components}
+                        storedData={storedData.components}
+                        handleComponentDrawableChange={handleComponentDrawableChange}
+                        handleComponentTextureChange={handleComponentTextureChange}
+                        componentConfig={config.componentConfig}
+                        hasTracker={config.hasTracker}
+                        isPedFreemodeModel={isPedFreemodeModel}
+                      />
+                    )}
+
+                    {currentTab === 'accessories' && config.props && (
+                      <Props
+                        settings={appearanceSettings.props}
+                        data={data.props}
+                        storedData={storedData.props}
+                        handlePropDrawableChange={handlePropDrawableChange}
+                        handlePropTextureChange={handlePropTextureChange}
+                        propConfig={config.propConfig}
+                      />
+                    )}
+
+                    {currentTab === 'tattoos' && isPedFreemodeModel && config.tattoos && (
+                      <Tattoos
+                        settings={filterTattoos(appearanceSettings.tattoos)}
+                        data={data.tattoos}
+                        storedData={storedData.tattoos}
+                        handleApplyTattoo={handleApplyTattoo}
+                        handlePreviewTattoo={handlePreviewTattoo}
+                        handleDeleteTattoo={handleDeleteTattoo}
+                        handleClearTattoos={handleClearTattoos}
+                      />
+                    )}
+                  </PanelBody>
+                </RightPanel>
+
+                <Footer>
+                  <div className="help">
+                    <div className="help-item">
+                      <span className="kbd">A</span>
+                      <span className="kbd">D</span>
+                      <span>Rotate Player</span>
+                    </div>
+                    <div className="help-item">
+                      <span>Use the right menu for more options</span>
+                    </div>
+                  </div>
+                  <div className="brand">
+                    <span className="accent">FiveM</span>
+                  </div>
+                </Footer>
               </Wrapper>
             </animated.div>
           ),

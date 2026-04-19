@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef, ReactNode } from 'react';
-import styled, { css } from 'styled-components';
-import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { useSpring, animated } from 'react-spring';
+import { ReactNode } from 'react';
+import styled from 'styled-components';
 
 interface SectionProps {
   title: string;
@@ -9,106 +7,42 @@ interface SectionProps {
   children?: ReactNode;
 }
 
-interface HeaderProps {
-  active: boolean;
-}
-
 const Container = styled.div`
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
+  gap: 10px;
   color: rgba(${props => props.theme.fontColor || '255, 255, 255'}, 1);
-
   user-select: none;
-
-  & + div {
-    margin-top: 10px;
-  }
 `;
 
-const Header = styled.div<HeaderProps>`
+const Header = styled.div`
   width: 100%;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 10px;
-  border-radius: ${props => props.theme.borderRadius || '4px'};
-
-  z-index: 2;
-
-  background: rgba(${props => props.theme.secondaryBackground || '0, 0, 0'}, ${({ active }) => (active ? '0.9' : '0.7')});
-
-  box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.2);
-
-  transition: background 0.1s;
-
-  &:hover {
-    background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 0.9);
-    transform: scale(1.05);
-    transition: background 0.2s;
-    cursor: pointer;
-  }
-
-  ${({ active }) =>
-    active &&
-    css`
-      background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 1);
-      &:hover {
-        ${props => props.theme.smoothBackgroundTransition ? 'transition: background 0.2s;' : ''}
-        background: rgba(${props => props.theme.primaryBackground || '0, 0, 0'}, 1);
-      }
-    `}
+  padding: 2px 4px;
+  color: #fff;
 
   span {
-    font-size: 15px;
-    font-weight: ${props => props.theme.sectionFontWeight || 'normal'};
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 1);
   }
 `;
 
 const Items = styled.div`
-  padding: 0 2px 5px 2px;
-
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
-const Section: React.FC<SectionProps> = ({ children, title, deps = [] }) => {
-  const [active, setActive] = useState(false);
-
-  const [height, setHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const props = useSpring({
-    height: active ? height : 0,
-    opacity: active ? 1 : 0,
-  });
-
-  useEffect(() => {
-    if (ref.current) {
-      setHeight(ref.current.offsetHeight);
-    }
-  }, [ref, setHeight]);
-
-  useEffect(() => {
-    if (ref.current) {
-      setHeight(ref.current.offsetHeight);
-    }
-  }, [ref, setHeight, deps]);
-
+const Section: React.FC<SectionProps> = ({ children, title }) => {
   return (
     <Container>
-      <Header active={active} onClick={() => setActive(state => !state)}>
+      <Header>
         <span>{title}</span>
-        {active ? <FiChevronUp size={30} /> : <FiChevronDown size={30} />}
       </Header>
-
-      <animated.div style={{ ...props, overflow: 'hidden' }}>
-        <Items ref={ref}>{children}</Items>
-      </animated.div>
+      <Items>{children}</Items>
     </Container>
   );
 };

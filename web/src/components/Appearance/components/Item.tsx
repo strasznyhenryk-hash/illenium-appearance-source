@@ -7,40 +7,37 @@ interface ItemProps {
 }
 
 const Container = styled.div`
-  margin-top: 0.5rem;
-
   display: flex;
   flex-direction: column;
+  gap: 10px;
 
-  padding: 10px;
-  border-radius: 2px;
+  padding: 14px;
+  border-radius: ${props => props.theme.borderRadius || '6px'};
 
-  background: rgba(${props => props.theme.secondayBackground || '0, 0, 0'}, 0.3);
+  background: rgba(18, 18, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
 
-  span {
-    color: rgba(${props => props.theme.fontColor || '255, 255, 255'}, 1);
-    font-size: 14px;
+  > .item-title {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
   }
 `;
 
 const Inputs = styled.div`
   width: 100%;
-  display: inline-flex;
-  flex-wrap: wrap;
-
-  margin-top: 10px;
-
-  > div {
-    & + div {
-      margin-top: 10px;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 const Item: React.FC<ItemProps> = ({ children, title }) => {
   return (
     <Container>
-      {title && <span>{title}</span>}
+      {title && <span className="item-title">{title}</span>}
       <Inputs>{children}</Inputs>
     </Container>
   );
