@@ -1,31 +1,32 @@
-# Redesigned UI — drop-in instructions
+# Redesigned illenium-appearance — gotowa paczka (drop-in)
 
-Ten branch zawiera już zbudowane pliki frontendu (`web/dist/`). Nie musisz nic budować.
+## TL;DR — jeden plik, wszystko w środku
 
-## Co podmienić w Twoim `illenium-appearance` na serwerze
+**Pobierz**: [`illenium-appearance-redesigned.zip`](https://github.com/strasznyhenryk-hash/illenium-appearance-source/raw/release/redesigned-ui-ready/illenium-appearance-redesigned.zip)
 
-W Twoim zasobie `resources/[standalone]/illenium-appearance/` (albo gdziekolwiek go trzymasz):
+W środku cały zasób `illenium-appearance/` (bazowany na oficjalnym iLLenium **v5.7.0**) z już podmienionym frontendem.
 
-1. Usuń stary folder `web/dist/` (całą zawartość)
-2. Skopiuj z tego repo `web/dist/index.html` i `web/dist/assets/*.js` do `illenium-appearance/web/dist/`
-3. Restart zasobu na serwerze:
-   ```
-   refresh
-   ensure illenium-appearance
-   ```
+## Instalacja
 
-Pliki `game/`, `fxmanifest.lua`, `locales/`, `peds.json`, `tattoos.json`, Lua logika — **niczego z tego nie ruszaj**. Redesign jest tylko frontendem.
+1. Zatrzymaj serwer FiveM (albo wyłącz zasób: `stop illenium-appearance`)
+2. W `resources/[standalone]/` (albo gdzie trzymasz illenium) **usuń cały stary folder** `illenium-appearance/`
+3. Wypakuj ZIP i wrzuć folder `illenium-appearance/` w to samo miejsce
+4. Wystartuj serwer (albo `ensure illenium-appearance`)
 
-## Jak pobrać tylko te 2 pliki
+Jeżeli masz swój zmodyfikowany `shared/config.lua`, `shared/blacklist.lua`, `shared/peds.lua`, `shared/tattoos.lua` — **skopiuj je ze swojej kopii zapasowej** do nowego folderu, zanim odpalisz serwer. Paczka zawiera domyślne wartości iLLenium.
 
-- `web/dist/index.html` → https://github.com/strasznyhenryk-hash/illenium-appearance-source/raw/release/redesigned-ui-ready/web/dist/index.html
-- `web/dist/assets/index.2b02af77.js` → https://github.com/strasznyhenryk-hash/illenium-appearance-source/raw/release/redesigned-ui-ready/web/dist/assets/index.2b02af77.js
+## Co jest w paczce
 
-(Po podmianie stary plik `index.*.js` w Twoim zasobie ma inną nazwę hash — usuń go, wrzuć nowy, `index.html` już referuje właściwą nazwę.)
+- Cały `illenium-appearance` v5.7.0 ze strony iLLeniumStudios (Lua client/server/shared, locales, SQL, fxmanifest)
+- Podmieniony `web/dist/` — mój redesign UI (tab-based layout, czerwony akcent, Gender card na DNA)
 
-## Albo cały ZIP z GitHub
+## Czego paczka **nie** zmienia
 
-Na stronie brancha kliknij **Code → Download ZIP**:
-https://github.com/strasznyhenryk-hash/illenium-appearance-source/archive/refs/heads/release/redesigned-ui-ready.zip
+- Żadna Lua logika
+- Żadne configi (poza tym że są defaultowe iLLenium v5.7.0 — musisz wrzucić swoje jeśli miałeś edytowane)
+- Żadne data files (peds/tattoos)
 
-Z ZIP-a weź tylko folder `web/dist/` i wrzuć do swojego zasobu.
+## Źródła
+
+- Upstream: https://github.com/iLLeniumStudios/illenium-appearance/releases/tag/v5.7.0
+- Redesign frontend source: [PR #1](https://github.com/strasznyhenryk-hash/illenium-appearance-source/pull/1)
