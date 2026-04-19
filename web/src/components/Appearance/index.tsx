@@ -79,8 +79,81 @@ if (!import.meta.env.PROD) {
   }));
 
   mock('appearance_get_data', () => ({
-    appearanceData: { ...APPEARANCE_INITIAL_STATE, model: 'mp_f_freemode_01' },
+    config: {
+      ped: true,
+      headBlend: true,
+      faceFeatures: true,
+      headOverlays: true,
+      components: true,
+      componentConfig: {
+        masks: true,
+        upperBody: true,
+        lowerBody: true,
+        bags: true,
+        shoes: true,
+        scarfAndChains: true,
+        shirts: true,
+        bodyArmor: true,
+        decals: true,
+        jackets: true,
+      },
+      props: true,
+      propConfig: { hats: true, glasses: true, ear: true, watches: true, bracelets: true },
+      tattoos: true,
+      enableExit: true,
+      hasTracker: false,
+      automaticFade: false,
+    },
+    appearanceData: { ...APPEARANCE_INITIAL_STATE, model: 'mp_m_freemode_01' },
   }));
+
+  mock('appearance_get_locales', () => ({
+    modal: {
+      save: { title: 'Save', description: 'Save changes?' },
+      exit: { title: 'Exit', description: 'Exit without saving?' },
+      accept: 'Accept',
+      decline: 'Decline',
+    },
+    ped: { title: 'Ped', model: 'Model' },
+    headBlend: {
+      title: 'Head Blend',
+      shape: { title: 'Shape', firstOption: 'Mother', secondOption: 'Father', mix: 'Similarity' },
+      skin: { title: 'Skin', firstOption: 'Mother', secondOption: 'Father', mix: 'Skin Color' },
+      race: { title: 'Race', shape: 'Shape', skin: 'Skin', mix: 'Mix' },
+    },
+    faceFeatures: {
+      title: 'Face Features',
+      nose: { title: 'Nose', width: 'Width', height: 'Height', size: 'Size', boneHeight: 'Bone Height', boneTwist: 'Bone Twist', peakHeight: 'Peak Height' },
+      eyebrows: { title: 'Eyebrows', height: 'Height', depth: 'Depth' },
+      cheeks: { title: 'Cheeks', boneHeight: 'Bone Height', boneWidth: 'Bone Width', width: 'Width' },
+      eyesAndMouth: { title: 'Eyes & Mouth', eyesOpening: 'Eyes Opening', lipsThickness: 'Lips Thickness' },
+      jaw: { title: 'Jaw', width: 'Width', size: 'Size' },
+      chin: { title: 'Chin', lowering: 'Lowering', length: 'Length', size: 'Size', hole: 'Hole' },
+      neck: { title: 'Neck', thickness: 'Thickness' },
+    },
+    headOverlays: {
+      title: 'Hair',
+      hair: { title: 'Hair', style: 'Style', color: 'Color', highlight: 'Highlight', fade: 'Fade', texture: 'Texture' },
+      opacity: 'Opacity', style: 'Style', color: 'Color', secondColor: 'Second Color',
+      blemishes: 'Blemishes', beard: 'Beard', eyebrows: 'Eyebrows', ageing: 'Ageing',
+      makeUp: 'Make-up', blush: 'Blush', complexion: 'Complexion', sunDamage: 'Sun Damage',
+      lipstick: 'Lipstick', moleAndFreckles: 'Moles & Freckles', chestHair: 'Chest Hair',
+      bodyBlemishes: 'Body Blemishes', eyeColor: 'Eye Color',
+    },
+    components: {
+      title: 'Clothes', drawable: 'Drawable', texture: 'Texture',
+      mask: 'Mask', upperBody: 'Upper Body', lowerBody: 'Lower Body', bags: 'Bags',
+      shoes: 'Shoes', scarfAndChains: 'Scarf & Chains', shirt: 'Shirt',
+      bodyArmor: 'Body Armor', decals: 'Decals', jackets: 'Jackets', head: 'Head',
+    },
+    props: {
+      title: 'Accessories', drawable: 'Drawable', texture: 'Texture',
+      hats: 'Hats', glasses: 'Glasses', ear: 'Ears', watches: 'Watches', bracelets: 'Bracelets',
+    },
+    tattoos: { title: 'Tattoos', items: {}, apply: 'Apply', delete: 'Delete', deleteAll: 'Delete All', opacity: 'Opacity' },
+  }));
+
+  mock('get_theme_configuration', () => ({ themes: [], currentTheme: 'default' }));
 
   mock('appearance_change_model', () => SETTINGS_INITIAL_STATE);
 
