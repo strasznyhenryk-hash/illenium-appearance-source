@@ -9,17 +9,18 @@ export const Wrapper = styled.div`
 
 export const Header = styled.div`
   position: absolute;
-  top: 40px;
+  top: 32px;
   left: 40px;
   z-index: 5;
   color: #fff;
   user-select: none;
+  max-width: 260px;
 
   h1 {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 800;
     letter-spacing: 2px;
-    line-height: 1;
+    line-height: 1.05;
   }
 
   h1 .accent {
@@ -28,19 +29,20 @@ export const Header = styled.div`
   }
 
   p {
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: 8px;
+    font-size: 11px;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.7);
-    max-width: 220px;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 200px;
     letter-spacing: 0.3px;
+    line-height: 1.35;
   }
 `;
 
 export const LeftNav = styled.nav`
   position: absolute;
   left: 40px;
-  top: 180px;
+  top: 210px;
   bottom: 110px;
   width: 220px;
   z-index: 5;
@@ -111,12 +113,18 @@ export const RightPanel = styled.aside`
   position: absolute;
   right: 40px;
   top: 40px;
-  bottom: 40px;
-  width: 360px;
+  bottom: 100px;
+  width: 420px;
   z-index: 4;
 
   display: flex;
   flex-direction: column;
+
+  padding: 18px 18px 18px 18px;
+  background: rgba(14, 14, 16, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: ${props => props.theme.borderRadius || '10px'};
 
   color: #fff;
 `;
@@ -137,12 +145,23 @@ export const PanelBody = styled.div`
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.35);
+    border-radius: 2px;
+  }
 `;
 
 export const IconRail = styled.div`
   position: absolute;
-  right: 420px;
+  right: 480px;
   top: 40px;
   z-index: 4;
 
