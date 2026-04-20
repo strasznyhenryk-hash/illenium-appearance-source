@@ -88,7 +88,7 @@ const Toggle = styled.button<ToggleProps>`
 const Gender: React.FC<GenderProps> = ({ isMale, onChange, disabled }) => {
   return (
     <Container>
-      <Title>Choose the Gender</Title>
+      <Title>Wybierz płeć</Title>
       <Buttons>
         <Toggle
           type="button"
@@ -96,7 +96,7 @@ const Gender: React.FC<GenderProps> = ({ isMale, onChange, disabled }) => {
           disabled={disabled}
           onClick={() => !disabled && onChange(true)}
         >
-          <FaMars size={14} /> Male
+          <FaMars size={14} /> Mężczyzna
         </Toggle>
         <Toggle
           type="button"
@@ -104,7 +104,7 @@ const Gender: React.FC<GenderProps> = ({ isMale, onChange, disabled }) => {
           disabled={disabled}
           onClick={() => !disabled && onChange(false)}
         >
-          <FaVenus size={14} /> Female
+          <FaVenus size={14} /> Kobieta
         </Toggle>
       </Buttons>
     </Container>

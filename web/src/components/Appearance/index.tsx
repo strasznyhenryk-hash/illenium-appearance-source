@@ -641,25 +641,25 @@ const Appearance = () => {
   }
 
   const tabs = [
-    { id: 'ped', label: 'Ped', icon: <FaUserAlt size={16} />, enabled: config.ped },
+    { id: 'ped', label: locales.ped?.title || 'Ped', icon: <FaUserAlt size={16} />, enabled: config.ped },
     {
       id: 'dna',
-      label: 'DNA',
+      label: locales.headBlend?.title || 'DNA',
       icon: <FaDna size={18} />,
       enabled: isPedFreemodeModel && config.headBlend,
     },
     {
       id: 'face',
-      label: 'Face',
+      label: locales.faceFeatures?.title || 'Face',
       icon: <FaSmile size={18} />,
       enabled: isPedFreemodeModel && config.faceFeatures,
     },
-    { id: 'hair', label: 'Hair', icon: <GiComb size={18} />, enabled: config.headOverlays },
-    { id: 'clothes', label: 'Clothes', icon: <FaTshirt size={16} />, enabled: config.components },
-    { id: 'accessories', label: 'Accessories', icon: <FaGlasses size={18} />, enabled: config.props },
+    { id: 'hair', label: locales.headOverlays?.title || 'Hair', icon: <GiComb size={18} />, enabled: config.headOverlays },
+    { id: 'clothes', label: locales.components?.title || 'Clothes', icon: <FaTshirt size={16} />, enabled: config.components },
+    { id: 'accessories', label: locales.props?.title || 'Accessories', icon: <FaGlasses size={18} />, enabled: config.props },
     {
       id: 'tattoos',
-      label: 'Tattoos',
+      label: locales.tattoos?.title || 'Tattoos',
       icon: <FaPaintBrush size={16} />,
       enabled: isPedFreemodeModel && config.tattoos,
     },
@@ -684,10 +684,10 @@ const Appearance = () => {
               <Wrapper>
                 <Header>
                   <h1>
-                    CHARACTER
-                    <span className="accent">CREATION</span>
+                    KREATOR
+                    <span className="accent">POSTACI</span>
                   </h1>
-                  <p>Customize your character. Use the menu to navigate through the options.</p>
+                  <p>Dostosuj swoją postać. Użyj menu, aby przechodzić między opcjami.</p>
                 </Header>
 
                 <LeftNav>
@@ -830,10 +830,10 @@ const Appearance = () => {
                     <div className="help-item">
                       <span className="kbd">A</span>
                       <span className="kbd">D</span>
-                      <span>Rotate Player</span>
+                      <span>Obróć postać</span>
                     </div>
                     <div className="help-item">
-                      <span>Use the right menu for more options</span>
+                      <span>Użyj menu po prawej dla więcej opcji</span>
                     </div>
                   </div>
                   <div className="brand">
