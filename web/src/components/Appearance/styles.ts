@@ -138,7 +138,6 @@ export const RightPanel = styled.aside`
 
   padding: 18px 18px 18px 18px;
   background: rgba(14, 14, 16, 0.55);
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: ${props => props.theme.borderRadius || '10px'};
 
@@ -214,7 +213,6 @@ export const Footer = styled.div`
     padding: 6px 10px;
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(4px);
   }
 
   .kbd {

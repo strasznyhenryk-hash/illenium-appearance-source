@@ -58,7 +58,6 @@ const IconButton = styled.button<ToggleButtonProps>`
 
   color: rgba(255, 255, 255, 0.8);
   background: rgba(18, 18, 20, 0.75);
-  backdrop-filter: blur(6px);
 
   &:hover {
     color: #fff;
