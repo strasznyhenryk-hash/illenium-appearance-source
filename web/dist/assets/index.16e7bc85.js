@@ -394,13 +394,14 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,fw=he.nav`
   position: absolute;
   left: 40px;
-  top: 360px;
+  top: 210px;
   bottom: 110px;
   width: 220px;
   z-index: 5;
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 10px;
 
   overflow-y: auto;
