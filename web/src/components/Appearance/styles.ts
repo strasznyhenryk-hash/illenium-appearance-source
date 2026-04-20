@@ -233,10 +233,11 @@ export const FlexWrapper = styled.div`
   width: 100%;
 
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
 
   > div {
-    flex: 1;
+    width: 100%;
   }
 `;
 

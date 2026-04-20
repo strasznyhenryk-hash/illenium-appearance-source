@@ -52,7 +52,7 @@ const IconButton = styled.button<ToggleButtonProps>`
   justify-content: center;
 
   border: 0;
-  border-radius: 50%;
+  border-radius: 10px;
 
   transition: all 0.2s ease;
 

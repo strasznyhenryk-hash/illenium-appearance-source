@@ -42,19 +42,6 @@ const Container = styled.div`
     flex: 1;
     display: flex;
     align-items: center;
-
-    &::before {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.25);
-      border: 1px solid rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.5);
-    }
   }
 
   input[type='range'] {
