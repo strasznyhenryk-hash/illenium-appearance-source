@@ -339,17 +339,18 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   overflow: hidden;
 `,j5=me.div`
   position: absolute;
-  top: 40px;
+  top: 32px;
   left: 40px;
   z-index: 5;
   color: #fff;
   user-select: none;
+  max-width: 260px;
 
   h1 {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 800;
     letter-spacing: 2px;
-    line-height: 1;
+    line-height: 1.05;
   }
 
   h1 .accent {
@@ -358,17 +359,18 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   }
 
   p {
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: 8px;
+    font-size: 11px;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.7);
-    max-width: 220px;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 200px;
     letter-spacing: 0.3px;
+    line-height: 1.35;
   }
 `,H5=me.nav`
   position: absolute;
   left: 40px;
-  top: 180px;
+  top: 210px;
   bottom: 110px;
   width: 220px;
   z-index: 5;
@@ -424,12 +426,18 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   position: absolute;
   right: 40px;
   top: 40px;
-  bottom: 40px;
-  width: 360px;
+  bottom: 100px;
+  width: 420px;
   z-index: 4;
 
   display: flex;
   flex-direction: column;
+
+  padding: 18px 18px 18px 18px;
+  background: rgba(14, 14, 16, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: ${e=>e.theme.borderRadius||"10px"};
 
   color: #fff;
 `;me.div`
@@ -446,10 +454,21 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.35);
+    border-radius: 2px;
+  }
 `,Q5=me.div`
   position: absolute;
-  right: 420px;
+  right: 480px;
   top: 40px;
   z-index: 4;
 
