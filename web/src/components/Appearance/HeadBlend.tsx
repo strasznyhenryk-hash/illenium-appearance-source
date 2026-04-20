@@ -1,3 +1,6 @@
+import styled from 'styled-components';
+import { FaMars, FaVenus } from 'react-icons/fa';
+
 import { useNuiState } from '../../hooks/nuiState';
 
 import Section from './components/Section';
@@ -6,6 +9,48 @@ import Input from './components/Input';
 import RangeInput from './components/RangeInput';
 
 import { PedHeadBlend, HeadBlendSettings } from './interfaces';
+
+const ParentPreview = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 4px;
+`;
+
+const ParentCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: ${props => props.theme.borderRadius || '6px'};
+  background: rgba(30, 30, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .silhouette {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+  }
+`;
 
 interface HeadBlendProps {
   settings: HeadBlendSettings;
@@ -24,6 +69,22 @@ const HeadBlend = ({ settings, storedData, data, handleHeadBlendChange }: HeadBl
   return (
     <Section title={locales.headBlend.title}>
       <Item title={locales.headBlend.shape.title}>
+        <ParentPreview>
+          <ParentCard>
+            <div className="silhouette">
+              <FaMars size={22} />
+            </div>
+            <span className="label">{locales.headBlend.shape.firstOption}</span>
+            <span className="value">#{data.shapeFirst}</span>
+          </ParentCard>
+          <ParentCard>
+            <div className="silhouette">
+              <FaVenus size={22} />
+            </div>
+            <span className="label">{locales.headBlend.shape.secondOption}</span>
+            <span className="value">#{data.shapeSecond}</span>
+          </ParentCard>
+        </ParentPreview>
         <Input
           title={locales.headBlend.shape.firstOption}
           min={settings.shapeFirst.min}
