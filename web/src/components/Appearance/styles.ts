@@ -79,32 +79,48 @@ export const NavItem = styled.button<NavItemProps>`
   text-align: left;
 
   .icon {
-    width: 40px;
-    height: 40px;
+    position: relative;
+    width: 46px;
+    height: 52px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     background: ${({ active }) =>
       active
-        ? `rgba(${'227, 32, 59'}, 0.18)`
-        : 'rgba(30, 30, 32, 0.7)'};
-    color: ${({ active }) =>
-      active ? `rgb(${'227, 32, 59'})` : 'rgba(255, 255, 255, 0.75)'};
-    border-radius: ${props => props.theme.borderRadius || '6px'};
-    transition: all 0.2s ease;
-    border: 1px solid
-      ${({ active }) =>
-        active
-          ? `rgba(${'227, 32, 59'}, 0.5)`
-          : 'rgba(255, 255, 255, 0.06)'};
+        ? `rgba(227, 32, 59, 0.9)`
+        : 'rgba(255, 255, 255, 0.12)'};
+    color: ${({ active }) => (active ? '#fff' : 'rgba(255, 255, 255, 0.75)')};
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .icon::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: ${({ active }) =>
+      active
+        ? `rgba(227, 32, 59, 0.22)`
+        : 'rgba(28, 28, 30, 0.92)'};
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    transition: background 0.2s ease;
+    z-index: 0;
+  }
+
+  .icon > * {
+    position: relative;
+    z-index: 1;
   }
 
   &:hover {
     color: #fff;
     .icon {
       color: #fff;
-      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.22);
-      border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.5);
+      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.8);
+    }
+    .icon::before {
+      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.2);
     }
   }
 `;
