@@ -416,7 +416,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   height: 52px;
   padding: 0 14px;
   border: 0;
-  background: ${({active:e})=>e?"rgba(18, 18, 20, 0.75)":"rgba(18, 18, 20, 0.5)"};
+  background: transparent;
   color: ${({active:e})=>e?"#fff":"rgba(255, 255, 255, 0.55)"};
   font-size: 14px;
   font-weight: ${({active:e})=>e?600:500};
@@ -426,36 +426,20 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   text-align: left;
 
   .icon {
-    position: relative;
     width: 46px;
     height: 52px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(18, 18, 20, 0.7);
     color: ${({active:e})=>e?"#fff":"rgba(255, 255, 255, 0.75)"};
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
     transition: color 0.2s ease;
   }
 
-  .icon::before {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    background: rgba(28, 28, 30, 0.92);
-    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    z-index: 0;
-  }
-
-  .icon > * {
-    position: relative;
-    z-index: 1;
-  }
-
   &:hover {
     color: #fff;
-    background: rgba(18, 18, 20, 0.7);
     .icon {
       color: #fff;
     }
@@ -504,8 +488,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,sw=he.div`
   position: absolute;
   right: 480px;
-  top: 40px;
-  padding-top: 4px;
+  top: 96px;
   z-index: 4;
 
   display: flex;
