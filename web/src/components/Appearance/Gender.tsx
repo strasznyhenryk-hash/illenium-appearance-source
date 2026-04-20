@@ -15,7 +15,6 @@ const Container = styled.div`
   border-radius: ${props => props.theme.borderRadius || '6px'};
   background: rgba(18, 18, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
 `;
 
 const Title = styled.div`

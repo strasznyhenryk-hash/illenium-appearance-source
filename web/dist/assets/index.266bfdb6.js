@@ -117,7 +117,6 @@ Error generating stack: `+o.message+`
 
   background: rgba(18, 18, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
 
   > .item-title {
     color: rgba(255, 255, 255, 0.7);
@@ -452,7 +451,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
   padding: 18px 18px 18px 18px;
   background: rgba(14, 14, 16, 0.55);
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: ${e=>e.theme.borderRadius||"10px"};
 
@@ -520,7 +518,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     padding: 6px 10px;
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(4px);
   }
 
   .kbd {
@@ -576,7 +573,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
   color: rgba(255, 255, 255, 0.8);
   background: rgba(18, 18, 20, 0.75);
-  backdrop-filter: blur(6px);
 
   &:hover {
     color: #fff;
@@ -705,7 +701,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   border-radius: ${e=>e.theme.borderRadius||"6px"};
   background: rgba(18, 18, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
 `,ww=me.div`
   font-size: 14px;
   font-weight: 500;

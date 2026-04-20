@@ -16,7 +16,6 @@ const Container = styled.div`
 
   background: rgba(18, 18, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
 
   > .item-title {
     color: rgba(255, 255, 255, 0.7);
