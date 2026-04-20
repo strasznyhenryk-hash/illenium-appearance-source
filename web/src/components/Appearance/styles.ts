@@ -42,7 +42,7 @@ export const Header = styled.div`
 export const LeftNav = styled.nav`
   position: absolute;
   left: 40px;
-  top: 150px;
+  top: 260px;
   bottom: 110px;
   width: 220px;
   z-index: 5;
