@@ -49,7 +49,8 @@ export const LeftNav = styled.nav`
 
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: center;
+  gap: 10px;
 
   overflow-y: auto;
 
@@ -66,10 +67,10 @@ export const NavItem = styled.button<NavItemProps>`
   display: flex;
   align-items: center;
   gap: 14px;
-  height: 50px;
+  height: 52px;
   padding: 0 14px;
   border: 0;
-  background: transparent;
+  background: ${({ active }) => (active ? 'rgba(18, 18, 20, 0.75)' : 'rgba(18, 18, 20, 0.5)')};
   color: ${({ active }) => (active ? '#fff' : 'rgba(255, 255, 255, 0.55)')};
   font-size: 14px;
   font-weight: ${({ active }) => (active ? 600 : 500)};
@@ -108,6 +109,7 @@ export const NavItem = styled.button<NavItemProps>`
 
   &:hover {
     color: #fff;
+    background: rgba(18, 18, 20, 0.7);
     .icon {
       color: #fff;
     }
@@ -165,11 +167,12 @@ export const IconRail = styled.div`
   position: absolute;
   right: 480px;
   top: 40px;
+  padding-top: 4px;
   z-index: 4;
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 `;
 
 export const Footer = styled.div`

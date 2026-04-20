@@ -40,7 +40,7 @@ interface OptionsProps {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 `;
 
 const IconButton = styled.button<ToggleButtonProps>`
@@ -74,12 +74,6 @@ const IconButton = styled.button<ToggleButtonProps>`
         background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 1);
       }
     `}
-`;
-
-const Divider = styled.div`
-  height: 1px;
-  margin: 2px 6px;
-  background: rgba(255, 255, 255, 0.08);
 `;
 
 const ToggleOption: React.FC<ToggleOptionProps> = ({ children, active, onClick, title }) => {
@@ -144,7 +138,6 @@ const Options: React.FC<OptionsProps> = ({
       <ToggleOption active={rotate.right} onClick={handleRotateRight} title="Rotate right">
         <FaUndo size={13} />
       </ToggleOption>
-      <Divider />
       <Option onClick={handleSave} title="Save">
         <FaSave size={14} />
       </Option>
