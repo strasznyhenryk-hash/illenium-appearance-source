@@ -42,14 +42,13 @@ export const Header = styled.div`
 export const LeftNav = styled.nav`
   position: absolute;
   left: 40px;
-  top: 210px;
+  top: 150px;
   bottom: 110px;
   width: 220px;
   z-index: 5;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 10px;
 
   overflow-y: auto;
