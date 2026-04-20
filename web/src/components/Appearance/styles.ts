@@ -86,25 +86,18 @@ export const NavItem = styled.button<NavItemProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${({ active }) =>
-      active
-        ? `rgba(227, 32, 59, 0.9)`
-        : 'rgba(255, 255, 255, 0.12)'};
+    background: rgba(255, 255, 255, 0.12);
     color: ${({ active }) => (active ? '#fff' : 'rgba(255, 255, 255, 0.75)')};
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
   }
 
   .icon::before {
     content: '';
     position: absolute;
     inset: 2px;
-    background: ${({ active }) =>
-      active
-        ? `rgba(227, 32, 59, 0.22)`
-        : 'rgba(28, 28, 30, 0.92)'};
+    background: rgba(28, 28, 30, 0.92);
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    transition: background 0.2s ease;
     z-index: 0;
   }
 
@@ -117,10 +110,6 @@ export const NavItem = styled.button<NavItemProps>`
     color: #fff;
     .icon {
       color: #fff;
-      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.8);
-    }
-    .icon::before {
-      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.2);
     }
   }
 `;
@@ -136,10 +125,8 @@ export const RightPanel = styled.aside`
   display: flex;
   flex-direction: column;
 
-  padding: 18px 18px 18px 18px;
-  background: rgba(14, 14, 16, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: ${props => props.theme.borderRadius || '10px'};
+  padding: 4px 4px 4px 18px;
+  background: transparent;
 
   color: #fff;
 `;

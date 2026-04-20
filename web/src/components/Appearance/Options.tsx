@@ -44,33 +44,31 @@ const Container = styled.div`
 `;
 
 const IconButton = styled.button<ToggleButtonProps>`
-  height: 36px;
-  width: 36px;
+  height: 40px;
+  width: 40px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: ${props => props.theme.borderRadius || '6px'};
+  border: 0;
+  border-radius: 50%;
 
   transition: all 0.2s ease;
 
   color: rgba(255, 255, 255, 0.8);
-  background: rgba(18, 18, 20, 0.75);
+  background: rgba(28, 28, 30, 0.92);
 
   &:hover {
     color: #fff;
-    background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.15);
-    border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.5);
+    background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.9);
   }
 
   ${({ active }) =>
     active &&
     css`
       color: #fff;
-      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.9);
-      border-color: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 1);
+      background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 0.95);
 
       &:hover {
         background: rgba(${props => props.theme.accentColor || '227, 32, 59'}, 1);

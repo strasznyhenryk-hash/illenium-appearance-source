@@ -407,19 +407,18 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${({active:e})=>e?"rgba(227, 32, 59, 0.9)":"rgba(255, 255, 255, 0.12)"};
+    background: rgba(255, 255, 255, 0.12);
     color: ${({active:e})=>e?"#fff":"rgba(255, 255, 255, 0.75)"};
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
   }
 
   .icon::before {
     content: '';
     position: absolute;
     inset: 2px;
-    background: ${({active:e})=>e?"rgba(227, 32, 59, 0.22)":"rgba(28, 28, 30, 0.92)"};
+    background: rgba(28, 28, 30, 0.92);
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    transition: background 0.2s ease;
     z-index: 0;
   }
 
@@ -432,10 +431,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     color: #fff;
     .icon {
       color: #fff;
-      background: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.8);
-    }
-    .icon::before {
-      background: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.2);
     }
   }
 `,W5=me.aside`
@@ -449,10 +444,8 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   display: flex;
   flex-direction: column;
 
-  padding: 18px 18px 18px 18px;
-  background: rgba(14, 14, 16, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: ${e=>e.theme.borderRadius||"10px"};
+  padding: 4px 4px 4px 18px;
+  background: transparent;
 
   color: #fff;
 `;me.div`
@@ -559,31 +552,29 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   flex-direction: column;
   gap: 6px;
 `,nm=me.button`
-  height: 36px;
-  width: 36px;
+  height: 40px;
+  width: 40px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: ${e=>e.theme.borderRadius||"6px"};
+  border: 0;
+  border-radius: 50%;
 
   transition: all 0.2s ease;
 
   color: rgba(255, 255, 255, 0.8);
-  background: rgba(18, 18, 20, 0.75);
+  background: rgba(28, 28, 30, 0.92);
 
   &:hover {
     color: #fff;
-    background: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.15);
-    border-color: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.5);
+    background: rgba(${e=>e.theme.accentColor||"227, 32, 59"}, 0.9);
   }
 
   ${({active:e})=>e&&Br`
       color: #fff;
-      background: rgba(${t=>t.theme.accentColor||"227, 32, 59"}, 0.9);
-      border-color: rgba(${t=>t.theme.accentColor||"227, 32, 59"}, 1);
+      background: rgba(${t=>t.theme.accentColor||"227, 32, 59"}, 0.95);
 
       &:hover {
         background: rgba(${t=>t.theme.accentColor||"227, 32, 59"}, 1);
