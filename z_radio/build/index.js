@@ -29,7 +29,7 @@
     const app = $("app");
     const statusText = $("statusText");
     const onlineCount = $("onlineCount");
-    const radioLed = $("radioLed");
+    const radioLed = { className: '' };
     const memberList = $("memberList");
     const favList = $("favList");
     const recentList = $("recentList");
@@ -38,11 +38,11 @@
     const volumeVal = $("volumeVal");
     const displayName = $("displayName");
     const soundIcon = $("soundIcon");
-    const headerBattery = $("headerBattery");
+    const headerBattery = { className: '' };
     const notifyEl = $("notify");
     const overlay = $("overlay");
     const overlayList = $("overlayList");
-    const btnStar = $("btnStar");
+    const btnStar = null;
     const btnToggleOverlay = $("btnToggleOverlay");
     const btnAllowMove = $("btnAllowMove");
     const btnEnableClicks = $("btnEnableClicks");
@@ -122,6 +122,7 @@
     }
 
     function updateStarButton() {
+        if (!btnStar) return;
         if (state.onRadio && state.favourite.includes(state.channel)) {
             btnStar.classList.add("faved");
         } else {
@@ -446,34 +447,19 @@
         showPage("pageRecent");
     });
 
-    // Star button (add/remove favorite)
-    btnStar.addEventListener("click", () => {
-        if (!state.onRadio || state.channel === 0) return;
-        if (state.favourite.includes(state.channel)) {
-            nuiCallback("removeFav", state.channel);
-            state.favourite = state.favourite.filter(c => c !== state.channel);
-        } else {
-            nuiCallback("addFav", state.channel);
-            state.favourite.push(state.channel);
-        }
-        updateStarButton();
-    });
+    // Star button removed from HTML - favorites via MOJE RADIA page
 
-    // Green button (connect - go to channel input)
-    $("btnCallGreen").addEventListener("click", () => {
-        if (!state.onRadio) {
-            showPage("pageChannel");
-        }
-    });
-
-    // Red button (disconnect)
-    $("btnCallRed").addEventListener("click", () => {
-        if (state.onRadio) {
-            nuiCallback("leave", null);
-        } else {
-            nuiCallback("hideUI", null);
-        }
-    });
+    // PTT button (positioned over physical button on overlay)
+    const pttBtn = $("btnCallGreen");
+    if (pttBtn) {
+        pttBtn.addEventListener("click", () => {
+            if (!state.onRadio) {
+                showPage("pageChannel");
+            } else {
+                nuiCallback("leave", null);
+            }
+        });
+    }
 
     // Numpad
     document.querySelectorAll(".num-btn").forEach(btn => {

@@ -6,36 +6,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <title>ZRadio</title>
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
     <div id="app" style="display:none;">
-        <!-- RADIO BODY -->
-        <div id="radio-body" class="radio-body">
-            <!-- ANTENNA -->
-            <div class="radio-antenna">
-                <div class="antenna-tip"></div>
-                <div class="antenna-rod"></div>
-            </div>
-            <!-- TOP KNOB -->
-            <div class="radio-knob-top">
-                <div class="knob-ridges"></div>
-            </div>
-            <!-- HEADER BAR -->
-            <div class="radio-header">
-                <span class="brand-name">ZRADIO</span>
-                <div class="header-icons">
-                    <i class="fas fa-volume-up" id="headerSpeaker"></i>
-                    <i class="fas fa-battery-full" id="headerBattery"></i>
-                </div>
-            </div>
-            <!-- LED INDICATOR -->
-            <div class="radio-led-row">
-                <div class="radio-led" id="radioLed"></div>
-            </div>
-            <!-- SCREEN -->
+        <!-- RADIO CONTAINER -->
+        <div id="radio-body" class="radio-container">
+            <!-- OVERLAY IMAGE (radio body frame) -->
+            <img src="./overlay.webp" alt="radio" class="radio-overlay-img" draggable="false" />
+
+            <!-- SCREEN CONTENT (positioned inside transparent area) -->
             <div class="radio-screen" id="radioScreen">
                 <!-- NOTIFY -->
                 <div id="notify" class="notify-bar" style="display:none;"></div>
@@ -167,7 +149,7 @@
                 </div>
             </div>
 
-            <!-- BOTTOM NAV -->
+            <!-- BOTTOM NAV (positioned over the body's lower area) -->
             <div class="radio-nav">
                 <button class="nav-btn active" id="navHome" data-page="pageHome">
                     <i class="fas fa-home"></i>
@@ -180,27 +162,11 @@
                 </button>
             </div>
 
-            <!-- PHYSICAL BUTTONS -->
-            <div class="radio-buttons">
-                <button class="phys-btn star-btn" id="btnStar">
-                    <i class="fas fa-star"></i>
-                </button>
-                <div class="phys-knobs">
-                    <div class="knob-slider"></div>
-                    <div class="knob-slider"></div>
-                </div>
-                <div class="call-btns">
-                    <button class="phys-btn call-green" id="btnCallGreen">
-                        <div class="btn-dot green-dot"></div>
-                    </button>
-                    <button class="phys-btn call-red" id="btnCallRed">
-                        <div class="btn-dot red-dot"></div>
-                    </button>
-                </div>
-            </div>
+            <!-- PTT BUTTON (positioned over the physical button on overlay) -->
+            <button class="ptt-btn" id="btnCallGreen"></button>
         </div>
 
-        <!-- OVERLAY -->
+        <!-- OVERLAY LIST -->
         <div id="overlay" class="overlay" style="display:none;">
             <div class="overlay-header">ZRADIO OVERLAY</div>
             <div class="overlay-list" id="overlayList"></div>
