@@ -41,26 +41,34 @@ body {
 /* ===== ANTENNA ===== */
 .radio-antenna {
     position: absolute;
-    top: -120px;
-    left: 35px;
+    top: -130px;
+    left: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: rotate(-8deg);
 }
 .antenna-tip {
-    width: 20px;
-    height: 50px;
-    background: linear-gradient(180deg, #2e1e33, #3d2845, #352040);
-    border-radius: 10px 10px 6px 6px;
-    box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+    width: 24px;
+    height: 55px;
+    background: linear-gradient(180deg, #2a1a30 0%, #3d2845 30%, #4a3055 50%, #3d2845 70%, #2a1a30 100%);
+    background-image:
+        linear-gradient(180deg, #2a1a30 0%, #3d2845 30%, #4a3055 50%, #3d2845 70%, #2a1a30 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.3), transparent 30%, transparent 70%, rgba(0,0,0,0.3));
+    border-radius: 12px 12px 8px 8px;
+    box-shadow:
+        inset 2px 0 4px rgba(255,255,255,0.06),
+        inset -1px 0 3px rgba(0,0,0,0.3),
+        0 0 4px rgba(0,0,0,0.4);
 }
 .antenna-rod {
-    width: 8px;
-    height: 70px;
-    background: linear-gradient(90deg, #333, #5a5a5a, #333);
-    border-radius: 2px;
-    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    width: 10px;
+    height: 75px;
+    background: linear-gradient(90deg, #444 0%, #6a6a6a 30%, #888 50%, #6a6a6a 70%, #444 100%);
+    border-radius: 3px;
+    box-shadow:
+        inset 1px 0 2px rgba(255,255,255,0.15),
+        inset -1px 0 2px rgba(0,0,0,0.2),
+        0 0 3px rgba(0,0,0,0.3);
 }
 
 /* ===== TOP KNOB ===== */
@@ -115,7 +123,9 @@ body {
 
 /* ===== LED ===== */
 .radio-led-row {
-    display: none;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 14px 3px;
 }
 .radio-led {
     width: 6px;
