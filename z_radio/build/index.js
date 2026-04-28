@@ -38,7 +38,7 @@
     const volumeVal = $("volumeVal");
     const displayName = $("displayName");
     const soundIcon = $("soundIcon");
-    const headerBattery = { className: '' };
+    const headerBattery = $("headerBattery");
     const notifyEl = $("notify");
     const overlay = $("overlay");
     const overlayList = $("overlayList");
