@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <title>ZRadio</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div id="app" style="display:none;">
+        <!-- RADIO CONTAINER -->
+        <div id="radio-body" class="radio-container">
+            <!-- OVERLAY IMAGE (radio body frame) -->
+            <img src="./overlay.webp" alt="radio" class="radio-overlay-img" draggable="false" />
+
+            <!-- SCREEN CONTENT (positioned inside transparent area) -->
+            <div class="radio-screen" id="radioScreen">
+                <!-- HEADER BAR -->
+                <div class="screen-header">
+                    <span class="brand-name">TELCLEF</span>
+                    <div class="header-icons">
+                        <i class="fas fa-volume-up" id="headerSpeaker"></i>
+                        <i class="fas fa-battery-full" id="headerBattery"></i>
+                    </div>
+                </div>
+
+                <!-- NOTIFY -->
+                <div id="notify" class="notify-bar" style="display:none;"></div>
+
+                <!-- PAGE: HOME -->
+                <div class="page active" id="pageHome">
+                    <!-- Row 1: Status + Refresh -->
+                    <div class="home-row row-status">
+                        <button class="lcd-btn status-btn" id="btnStatus">
+                            <span id="statusText">ROZLACZONO</span>
+                        </button>
+                        <button class="lcd-btn refresh-btn" id="btnReconnect">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <!-- Row 2-3: Online + MyRadios/Secure -->
+                    <div class="home-row row-main">
+                        <button class="lcd-btn online-btn" id="btnOnline">
+                            <span class="lcd-label">ONLINE</span>
+                            <div class="online-row">
+                                <i class="fas fa-user"></i>
+                                <span id="onlineCount" class="online-num">0</span>
+                            </div>
+                        </button>
+                        <div class="right-stack">
+                            <button class="lcd-btn stack-btn" id="btnMyRadios">
+                                <span>MOJE</span>
+                                <span>RADIA</span>
+                            </button>
+                            <button class="lcd-btn stack-btn" id="btnSecure">
+                                <span>BEZPIECZNE</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Row 4: Sound + Recent -->
+                    <div class="home-row row-bottom">
+                        <button class="lcd-btn sound-btn" id="btnSound">
+                            <i class="fas fa-headphones" id="soundIcon"></i>
+                        </button>
+                        <button class="lcd-btn recent-btn" id="btnRecent">
+                            <span>OSTATNIE</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PAGE: MEMBERS -->
+                <div class="page" id="pageMembers">
+                    <div class="page-title">CZLONKOWIE</div>
+                    <div class="member-list" id="memberList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackMembers"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
+                </div>
+
+                <!-- PAGE: FAVORITES -->
+                <div class="page" id="pageFavorites">
+                    <div class="page-title">MOJE RADIA</div>
+                    <div class="fav-list" id="favList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackFav"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
+                </div>
+
+                <!-- PAGE: RECENT -->
+                <div class="page" id="pageRecent">
+                    <div class="page-title">OSTATNIE</div>
+                    <div class="recent-list" id="recentList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackRecent"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
+                </div>
+
+                <!-- PAGE: SETTINGS -->
+                <div class="page" id="pageSettings">
+                    <div class="page-title">USTAWIENIA</div>
+                    <div class="settings-content">
+                        <div class="setting-row">
+                            <label>GLOSNOSC</label>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="30" />
+                            <span id="volumeVal">30%</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>NAZWA</label>
+                            <input type="text" id="displayName" maxlength="20" placeholder="Twoja nazwa..." />
+                        </div>
+                        <div class="setting-row">
+                            <label>OVERLAY</label>
+                            <button class="lcd-btn small-btn" id="btnToggleOverlay">POKAZ</button>
+                        </div>
+                        <div class="setting-row">
+                            <label>RUCH</label>
+                            <button class="lcd-btn small-btn" id="btnAllowMove">WYL</button>
+                        </div>
+                        <div class="setting-row">
+                            <label>KLIKNIECIA</label>
+                            <button class="lcd-btn small-btn" id="btnEnableClicks">WYL</button>
+                        </div>
+                        <button class="lcd-btn save-btn" id="btnSaveSettings">ZAPISZ</button>
+                    </div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackSettings"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
+                </div>
+
+                <!-- PAGE: CHANNEL INPUT -->
+                <div class="page" id="pageChannel">
+                    <div class="page-title">CZESTOTLIWOSC</div>
+                    <div class="channel-input-area">
+                        <div class="freq-display" id="freqDisplay">0.00</div>
+                        <div class="numpad">
+                            <button class="num-btn" data-num="1">1</button>
+                            <button class="num-btn" data-num="2">2</button>
+                            <button class="num-btn" data-num="3">3</button>
+                            <button class="num-btn" data-num="4">4</button>
+                            <button class="num-btn" data-num="5">5</button>
+                            <button class="num-btn" data-num="6">6</button>
+                            <button class="num-btn" data-num="7">7</button>
+                            <button class="num-btn" data-num="8">8</button>
+                            <button class="num-btn" data-num="9">9</button>
+                            <button class="num-btn" data-num=".">.</button>
+                            <button class="num-btn" data-num="0">0</button>
+                            <button class="num-btn num-clear" data-num="C"><i class="fas fa-backspace"></i></button>
+                        </div>
+                        <button class="lcd-btn connect-btn" id="btnConnect">POLACZ</button>
+                    </div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackChannel"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAV (positioned over the body's lower area) -->
+            <div class="radio-nav">
+                <button class="nav-btn active" id="navHome" data-page="pageHome">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="nav-btn" id="navChannel" data-page="pageChannel">
+                    <i class="fas fa-broadcast-tower"></i>
+                </button>
+                <button class="nav-btn" id="navSettings" data-page="pageSettings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
+            <!-- PTT BUTTON (positioned over the physical button on overlay) -->
+            <button class="ptt-btn" id="btnCallGreen"></button>
+        </div>
+
+        <!-- OVERLAY LIST -->
+        <div id="overlay" class="overlay" style="display:none;">
+            <div class="overlay-header">ZRADIO OVERLAY</div>
+            <div class="overlay-list" id="overlayList"></div>
+        </div>
+    </div>
+
+    <script src="./index.js"></script>
+</body>
+</html>
