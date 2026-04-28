@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <title>ZRadio</title>
     <link rel="stylesheet" href="./index.css">
 </head>
@@ -20,7 +20,9 @@
                 <div class="antenna-rod"></div>
             </div>
             <!-- TOP KNOB -->
-            <div class="radio-knob-top"></div>
+            <div class="radio-knob-top">
+                <div class="knob-ridges"></div>
+            </div>
             <!-- HEADER BAR -->
             <div class="radio-header">
                 <span class="brand-name">ZRADIO</span>
@@ -30,7 +32,9 @@
                 </div>
             </div>
             <!-- LED INDICATOR -->
-            <div class="radio-led" id="radioLed"></div>
+            <div class="radio-led-row">
+                <div class="radio-led" id="radioLed"></div>
+            </div>
             <!-- SCREEN -->
             <div class="radio-screen" id="radioScreen">
                 <!-- NOTIFY -->
@@ -38,31 +42,38 @@
 
                 <!-- PAGE: HOME -->
                 <div class="page active" id="pageHome">
-                    <div class="screen-grid">
-                        <button class="lcd-btn wide" id="btnStatus" title="Status polaczenia">
+                    <!-- Row 1: Status + Refresh -->
+                    <div class="home-row row-status">
+                        <button class="lcd-btn status-btn" id="btnStatus">
                             <span id="statusText">ROZLACZONO</span>
                         </button>
-                        <button class="lcd-btn square" id="btnReconnect" title="Polacz/Rozlacz">
+                        <button class="lcd-btn refresh-btn" id="btnReconnect">
                             <i class="fas fa-sync-alt"></i>
                         </button>
-                        <button class="lcd-btn tall" id="btnOnline" title="Czlonkowie online">
+                    </div>
+                    <!-- Row 2-3: Online + MyRadios/Secure -->
+                    <div class="home-row row-main">
+                        <button class="lcd-btn online-btn" id="btnOnline">
                             <span class="lcd-label">ONLINE</span>
                             <i class="fas fa-user"></i>
-                            <span id="onlineCount">0</span>
+                            <span id="onlineCount" class="online-num">0</span>
                         </button>
                         <div class="right-stack">
-                            <button class="lcd-btn" id="btnMyRadios" title="Moje radia">
+                            <button class="lcd-btn stack-btn" id="btnMyRadios">
                                 <span>MOJE</span>
                                 <span>RADIA</span>
                             </button>
-                            <button class="lcd-btn" id="btnSecure" title="Polecane kanaly">
-                                <span>POLECANE</span>
+                            <button class="lcd-btn stack-btn" id="btnSecure">
+                                <span>BEZPIECZNE</span>
                             </button>
                         </div>
-                        <button class="lcd-btn square" id="btnSound" title="Dzwiek">
+                    </div>
+                    <!-- Row 4: Sound + Recent -->
+                    <div class="home-row row-bottom">
+                        <button class="lcd-btn sound-btn" id="btnSound">
                             <i class="fas fa-volume-up" id="soundIcon"></i>
                         </button>
-                        <button class="lcd-btn" id="btnRecent" title="Ostatnie">
+                        <button class="lcd-btn recent-btn" id="btnRecent">
                             <span>OSTATNIE</span>
                         </button>
                     </div>
@@ -72,18 +83,27 @@
                 <div class="page" id="pageMembers">
                     <div class="page-title">CZLONKOWIE</div>
                     <div class="member-list" id="memberList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackMembers"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
                 </div>
 
                 <!-- PAGE: FAVORITES -->
                 <div class="page" id="pageFavorites">
                     <div class="page-title">MOJE RADIA</div>
                     <div class="fav-list" id="favList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackFav"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
                 </div>
 
                 <!-- PAGE: RECENT -->
                 <div class="page" id="pageRecent">
                     <div class="page-title">OSTATNIE</div>
                     <div class="recent-list" id="recentList"></div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackRecent"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
                 </div>
 
                 <!-- PAGE: SETTINGS -->
@@ -101,17 +121,20 @@
                         </div>
                         <div class="setting-row">
                             <label>OVERLAY</label>
-                            <button class="lcd-btn small" id="btnToggleOverlay">POKAZ</button>
+                            <button class="lcd-btn small-btn" id="btnToggleOverlay">POKAZ</button>
                         </div>
                         <div class="setting-row">
                             <label>RUCH</label>
-                            <button class="lcd-btn small" id="btnAllowMove">WYL</button>
+                            <button class="lcd-btn small-btn" id="btnAllowMove">WYL</button>
                         </div>
                         <div class="setting-row">
                             <label>KLIKNIECIA</label>
-                            <button class="lcd-btn small" id="btnEnableClicks">WYL</button>
+                            <button class="lcd-btn small-btn" id="btnEnableClicks">WYL</button>
                         </div>
                         <button class="lcd-btn save-btn" id="btnSaveSettings">ZAPISZ</button>
+                    </div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackSettings"><i class="fas fa-arrow-left"></i> WSTECZ</button>
                     </div>
                 </div>
 
@@ -136,36 +159,39 @@
                         </div>
                         <button class="lcd-btn connect-btn" id="btnConnect">POLACZ</button>
                     </div>
+                    <div class="page-back">
+                        <button class="lcd-btn back-btn" id="btnBackChannel"><i class="fas fa-arrow-left"></i> WSTECZ</button>
+                    </div>
                 </div>
             </div>
 
             <!-- BOTTOM NAV -->
             <div class="radio-nav">
-                <button class="nav-btn active" id="navHome" data-page="pageHome" title="Glowna">
+                <button class="nav-btn active" id="navHome" data-page="pageHome">
                     <i class="fas fa-home"></i>
                 </button>
-                <button class="nav-btn" id="navChannel" data-page="pageChannel" title="Czestotliwosc">
+                <button class="nav-btn" id="navChannel" data-page="pageChannel">
                     <i class="fas fa-broadcast-tower"></i>
                 </button>
-                <button class="nav-btn" id="navSettings" data-page="pageSettings" title="Ustawienia">
+                <button class="nav-btn" id="navSettings" data-page="pageSettings">
                     <i class="fas fa-cog"></i>
                 </button>
             </div>
 
             <!-- PHYSICAL BUTTONS -->
             <div class="radio-buttons">
-                <button class="phys-btn star-btn" id="btnStar" title="Dodaj do ulubionych">
+                <button class="phys-btn star-btn" id="btnStar">
                     <i class="fas fa-star"></i>
                 </button>
                 <div class="phys-knobs">
-                    <div class="knob"></div>
-                    <div class="knob"></div>
+                    <div class="knob-slider"></div>
+                    <div class="knob-slider"></div>
                 </div>
                 <div class="call-btns">
-                    <button class="phys-btn call-green" id="btnCallGreen" title="Polacz">
+                    <button class="phys-btn call-green" id="btnCallGreen">
                         <div class="btn-dot green-dot"></div>
                     </button>
-                    <button class="phys-btn call-red" id="btnCallRed" title="Rozlacz">
+                    <button class="phys-btn call-red" id="btnCallRed">
                         <div class="btn-dot red-dot"></div>
                     </button>
                 </div>
