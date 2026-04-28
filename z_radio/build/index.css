@@ -38,13 +38,13 @@ body {
 /* ===== SCREEN CONTENT (inside transparent area) ===== */
 .radio-screen {
     position: absolute;
-    width: 173px;
-    height: 296px;
-    left: 52px;
-    bottom: 384px;
+    width: 203px;
+    height: 295px;
+    left: 62px;
+    top: 277px;
     z-index: 9;
     background: #c8c0b0;
-    border-radius: 0 0 8px 8px;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -179,15 +179,15 @@ body {
 /* ===== NAV BAR (positioned on radio body) ===== */
 .radio-nav {
     position: absolute;
-    width: 173px;
-    left: 52px;
-    bottom: 360px;
+    width: 203px;
+    left: 62px;
+    top: 572px;
     z-index: 10;
     display: flex;
     justify-content: space-around;
     padding: 3px 0;
     background: #3a3850;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 6px 6px;
 }
 .nav-btn {
     background: transparent;
