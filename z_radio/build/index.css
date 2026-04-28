@@ -23,9 +23,9 @@ body {
 /* ===== RADIO BODY ===== */
 .radio-body {
     position: absolute;
-    bottom: 15px;
+    bottom: 10px;
     right: 25px;
-    width: 330px;
+    width: 290px;
     background: linear-gradient(160deg, #353535 0%, #1c1c1c 30%, #252525 70%, #1a1a1a 100%);
     border-radius: 18px;
     box-shadow:
@@ -35,27 +35,27 @@ body {
         inset 0 -2px 6px rgba(0,0,0,0.3);
     pointer-events: all;
     overflow: visible;
-    padding-bottom: 14px;
+    padding-bottom: 16px;
 }
 
 /* ===== ANTENNA ===== */
 .radio-antenna {
     position: absolute;
-    top: -100px;
-    left: 55px;
+    top: -110px;
+    left: 45px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 .antenna-tip {
-    width: 14px;
-    height: 22px;
+    width: 16px;
+    height: 28px;
     background: linear-gradient(180deg, #2a1a2e, #3d2845, #2a1a2e);
-    border-radius: 7px 7px 4px 4px;
+    border-radius: 8px 8px 5px 5px;
 }
 .antenna-rod {
     width: 7px;
-    height: 78px;
+    height: 82px;
     background: linear-gradient(90deg, #2a2a2a, #4a4a4a, #2a2a2a);
     border-radius: 2px;
 }
@@ -63,10 +63,10 @@ body {
 /* ===== TOP KNOB ===== */
 .radio-knob-top {
     position: absolute;
-    top: -16px;
-    right: 35px;
-    width: 26px;
-    height: 30px;
+    top: -20px;
+    right: 30px;
+    width: 30px;
+    height: 38px;
     background: linear-gradient(180deg, #3a3a3a, #222, #3a3a3a);
     border-radius: 5px;
     border: 1px solid #444;
@@ -79,8 +79,8 @@ body {
         0deg,
         transparent 0px,
         transparent 3px,
-        rgba(0,0,0,0.3) 3px,
-        rgba(0,0,0,0.3) 4px
+        rgba(0,0,0,0.35) 3px,
+        rgba(0,0,0,0.35) 4.5px
     );
 }
 
@@ -89,11 +89,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 18px 4px;
+    padding: 14px 16px 6px;
 }
 .brand-name {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     color: #999;
     letter-spacing: 4px;
     font-weight: bold;
@@ -101,9 +101,9 @@ body {
 }
 .header-icons {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     color: #888;
-    font-size: 14px;
+    font-size: 13px;
 }
 .header-icons .fa-battery-full.low,
 .header-icons .fa-battery-empty {
@@ -113,12 +113,12 @@ body {
 /* ===== LED ===== */
 .radio-led-row {
     display: flex;
-    justify-content: flex-end;
-    padding: 0 18px 4px;
+    justify-content: center;
+    padding: 0 16px 5px;
 }
 .radio-led {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: #333;
     transition: background 0.3s;
@@ -126,11 +126,11 @@ body {
 }
 .radio-led.connected {
     background: #00cc44;
-    box-shadow: 0 0 8px rgba(0,204,68,0.6);
+    box-shadow: 0 0 10px rgba(0,204,68,0.7);
 }
 .radio-led.jammed {
     background: #cc0000;
-    box-shadow: 0 0 8px rgba(204,0,0,0.6);
+    box-shadow: 0 0 10px rgba(204,0,0,0.7);
     animation: blink 1s infinite;
 }
 @keyframes blink {
@@ -140,18 +140,17 @@ body {
 
 /* ===== SCREEN ===== */
 .radio-screen {
-    margin: 0 14px;
+    margin: 0 12px;
     background: linear-gradient(155deg, #ddd5c5 0%, #d4ccba 30%, #cec6b2 60%, #c8c0ac 100%);
-    border-radius: 6px;
-    min-height: 270px;
-    border: 2.5px solid #111;
+    border-radius: 8px;
+    min-height: 340px;
+    border: 3px solid #111;
     box-shadow:
         inset 0 2px 10px rgba(0,0,0,0.12),
         inset 0 0 30px rgba(0,0,0,0.04);
     overflow: hidden;
     position: relative;
 }
-/* Worn texture overlay */
 .radio-screen::before {
     content: '';
     position: absolute;
@@ -160,9 +159,10 @@ body {
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(ellipse at 20% 80%, rgba(0,0,0,0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(0,0,0,0.04) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 60%);
+        radial-gradient(ellipse at 15% 85%, rgba(0,0,0,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 15%, rgba(0,0,0,0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 40% 60%, rgba(0,0,0,0.02) 0%, transparent 60%),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.03) 0%, transparent 30%);
     pointer-events: none;
     z-index: 1;
 }
@@ -170,7 +170,7 @@ body {
 /* ===== PAGES ===== */
 .page {
     display: none;
-    padding: 10px;
+    padding: 12px;
     height: 100%;
     position: relative;
     z-index: 2;
@@ -183,32 +183,32 @@ body {
     font-size: 18px;
     color: #5c1010;
     text-align: center;
-    padding: 6px 0 8px;
+    padding: 8px 0 10px;
     letter-spacing: 3px;
     border-bottom: 1.5px solid rgba(92,16,16,0.15);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 .page-back {
     margin-top: auto;
-    padding-top: 6px;
+    padding-top: 8px;
 }
 .back-btn {
     width: 100%;
-    font-size: 14px;
-    padding: 6px;
+    font-size: 15px;
+    padding: 10px;
     letter-spacing: 1px;
 }
 
 /* ===== LCD BUTTONS ===== */
 .lcd-btn {
     background: linear-gradient(180deg, #e8e0d0 0%, #dcd4c2 40%, #d0c8b4 100%);
-    border: 2px solid #b0a890;
-    border-radius: 5px;
+    border: 2.5px solid #b0a890;
+    border-radius: 6px;
     color: #5c1010;
     font-family: 'Silkscreen', 'VT323', monospace;
     font-size: 16px;
     cursor: pointer;
-    padding: 8px 6px;
+    padding: 10px 8px;
     text-align: center;
     letter-spacing: 1px;
     box-shadow:
@@ -230,14 +230,14 @@ body {
     transform: translateY(2px);
 }
 .lcd-btn i {
-    font-size: 22px;
+    font-size: 24px;
 }
 
 /* ===== HOME ROWS ===== */
 .home-row {
     display: flex;
-    gap: 7px;
-    margin-bottom: 7px;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 .home-row:last-child {
     margin-bottom: 0;
@@ -246,71 +246,80 @@ body {
 /* Row 1: Status + Refresh */
 .status-btn {
     flex: 1;
-    font-size: 17px;
-    padding: 10px 8px;
+    font-size: 18px;
+    padding: 16px 10px;
     letter-spacing: 2px;
     font-weight: bold;
 }
 .refresh-btn {
-    width: 58px;
+    width: 62px;
     flex-shrink: 0;
+    padding: 16px 8px;
 }
 .refresh-btn i {
-    font-size: 22px;
+    font-size: 26px;
 }
 
 /* Row 2-3: Online + Stack */
 .row-main {
-    min-height: 110px;
+    flex: 1;
+    min-height: 140px;
 }
 .online-btn {
-    flex: 1;
-    gap: 3px;
+    flex: 0.85;
+    gap: 4px;
     font-size: 16px;
+    padding: 14px 8px;
 }
 .online-btn .lcd-label {
-    font-size: 16px;
+    font-size: 17px;
     letter-spacing: 3px;
 }
 .online-btn i {
-    font-size: 28px;
-    margin: 4px 0;
+    font-size: 32px;
+    margin: 6px 0;
 }
 .online-btn .online-num {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
 }
 .right-stack {
-    flex: 1;
+    flex: 1.15;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 8px;
 }
 .stack-btn {
     flex: 1;
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: 1px;
-    padding: 6px 4px;
+    padding: 10px 6px;
+    overflow: hidden;
 }
 
 /* Row 4: Sound + Recent */
+.row-bottom {
+    min-height: 55px;
+}
 .sound-btn {
-    width: 58px;
+    width: 62px;
     flex-shrink: 0;
+    padding: 14px 8px;
 }
 .sound-btn i {
-    font-size: 24px;
+    font-size: 28px;
 }
 .recent-btn {
     flex: 1;
-    font-size: 16px;
-    letter-spacing: 2px;
+    font-size: 17px;
+    letter-spacing: 3px;
+    padding: 14px 8px;
 }
 
 /* ===== MEMBERS ===== */
 .member-list {
     flex: 1;
-    max-height: 190px;
+    max-height: 230px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #a09880 transparent;
@@ -319,7 +328,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 8px;
+    padding: 8px 10px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
     font-size: 15px;
     color: #5c1010;
@@ -332,7 +341,7 @@ body {
 }
 .member-item .talking-icon {
     color: #888;
-    font-size: 13px;
+    font-size: 14px;
     margin-right: 8px;
     opacity: 0.3;
 }
@@ -365,7 +374,7 @@ body {
 /* ===== FAVORITES & RECENT ===== */
 .fav-list, .recent-list {
     flex: 1;
-    max-height: 190px;
+    max-height: 230px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #a09880 transparent;
@@ -374,7 +383,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 7px 10px;
+    padding: 9px 12px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
     font-size: 16px;
     color: #5c1010;
@@ -396,31 +405,31 @@ body {
     text-align: center;
     color: #8b6060;
     font-size: 15px;
-    padding: 25px 0;
+    padding: 30px 0;
     letter-spacing: 2px;
 }
 
 /* ===== SETTINGS ===== */
 .settings-content {
     flex: 1;
-    padding: 2px 4px;
+    padding: 4px 4px;
 }
 .setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 4px;
+    padding: 8px 4px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
 }
 .setting-row label {
     font-size: 13px;
     color: #5c1010;
     letter-spacing: 1px;
-    min-width: 80px;
+    min-width: 75px;
 }
 .setting-row input[type="range"] {
     flex: 1;
-    margin: 0 10px;
+    margin: 0 8px;
     accent-color: #5c1010;
     height: 4px;
 }
@@ -435,23 +444,23 @@ body {
     background: rgba(255,255,255,0.3);
     border: 1.5px solid #a09880;
     border-radius: 3px;
-    padding: 4px 8px;
+    padding: 5px 8px;
     font-family: 'VT323', monospace;
     font-size: 15px;
     color: #5c1010;
     outline: none;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 .small-btn {
     font-size: 13px;
-    padding: 4px 10px;
+    padding: 5px 12px;
     min-width: 55px;
 }
 .save-btn {
     width: 100%;
-    margin-top: 10px;
-    font-size: 15px;
-    padding: 8px;
+    margin-top: 12px;
+    font-size: 16px;
+    padding: 10px;
     letter-spacing: 3px;
 }
 
@@ -466,32 +475,32 @@ body {
 .freq-display {
     width: 100%;
     background: rgba(0,0,0,0.08);
-    border: 1.5px solid #a09880;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 32px;
+    border: 2px solid #a09880;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 34px;
     color: #5c1010;
     text-align: right;
     letter-spacing: 4px;
-    margin-bottom: 8px;
-    min-height: 50px;
+    margin-bottom: 10px;
+    min-height: 55px;
     font-family: 'VT323', monospace;
 }
 .numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+    gap: 6px;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 .num-btn {
     background: linear-gradient(180deg, #e8e0d0 0%, #d4cbb8 100%);
-    border: 2px solid #b0a890;
-    border-radius: 5px;
+    border: 2.5px solid #b0a890;
+    border-radius: 6px;
     color: #5c1010;
     font-family: 'Silkscreen', 'VT323', monospace;
-    font-size: 22px;
-    padding: 8px;
+    font-size: 24px;
+    padding: 10px;
     cursor: pointer;
     box-shadow: 0 3px 0 #a09880;
     transition: all 0.08s;
@@ -509,7 +518,7 @@ body {
 .connect-btn {
     width: 100%;
     font-size: 18px;
-    padding: 10px;
+    padding: 12px;
     letter-spacing: 4px;
 }
 
@@ -517,9 +526,8 @@ body {
 .radio-nav {
     display: flex;
     justify-content: space-around;
-    padding: 8px 16px 4px;
-    margin: 0 14px;
-    border-top: 1px solid rgba(255,255,255,0.03);
+    padding: 10px 14px 6px;
+    margin: 0 12px;
 }
 .nav-btn {
     background: none;
@@ -527,7 +535,7 @@ body {
     color: #666;
     font-size: 16px;
     cursor: pointer;
-    padding: 5px 16px;
+    padding: 6px 18px;
     transition: color 0.2s;
 }
 .nav-btn:hover, .nav-btn.active {
@@ -539,7 +547,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px 6px;
+    padding: 14px 22px 10px;
 }
 .phys-btn {
     border: none;
@@ -550,43 +558,43 @@ body {
     transform: scale(0.9);
 }
 .star-btn {
-    width: 46px;
-    height: 46px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
-    color: #888;
-    font-size: 20px;
+    color: #777;
+    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.08),
-        inset 0 -1px 3px rgba(0,0,0,0.3);
+        0 4px 10px rgba(0,0,0,0.5),
+        inset 0 2px 0 rgba(255,255,255,0.08),
+        inset 0 -2px 4px rgba(0,0,0,0.3);
 }
 .star-btn.faved {
     color: #ffcc00;
-    text-shadow: 0 0 6px rgba(255,204,0,0.3);
+    text-shadow: 0 0 8px rgba(255,204,0,0.3);
 }
 .phys-knobs {
     display: flex;
-    gap: 8px;
+    gap: 10px;
 }
 .knob-slider {
-    width: 12px;
-    height: 34px;
-    background: linear-gradient(90deg, #2a2a2a, #555, #2a2a2a);
-    border-radius: 3px;
+    width: 14px;
+    height: 40px;
+    background: linear-gradient(90deg, #222, #555, #222);
+    border-radius: 4px;
     border: 1px solid #1a1a1a;
-    box-shadow: inset 0 0 3px rgba(0,0,0,0.4);
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
 }
 .call-btns {
     display: flex;
-    gap: 6px;
+    gap: 8px;
 }
 .call-green, .call-red {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
     display: flex;
@@ -595,17 +603,17 @@ body {
     box-shadow: 0 3px 6px rgba(0,0,0,0.4);
 }
 .btn-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
 }
 .green-dot {
     background: radial-gradient(circle at 40% 40%, #44ee66, #00aa22);
-    box-shadow: 0 0 6px rgba(0,204,68,0.5);
+    box-shadow: 0 0 8px rgba(0,204,68,0.5);
 }
 .red-dot {
     background: radial-gradient(circle at 40% 40%, #ee4444, #aa0000);
-    box-shadow: 0 0 6px rgba(204,0,0,0.5);
+    box-shadow: 0 0 8px rgba(204,0,0,0.5);
 }
 
 /* ===== NOTIFY ===== */
@@ -617,7 +625,7 @@ body {
     background: rgba(92,16,16,0.92);
     color: #e8e0d0;
     font-size: 14px;
-    padding: 8px 12px;
+    padding: 10px 14px;
     text-align: center;
     letter-spacing: 1px;
     z-index: 20;
