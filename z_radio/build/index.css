@@ -7,7 +7,7 @@
 body {
     background: transparent;
     overflow: hidden;
-    font-family: 'Silkscreen', 'VT323', 'Share Tech Mono', 'Courier New', monospace;
+    font-family: 'Press Start 2P', 'VT323', monospace;
     user-select: none;
 }
 
@@ -25,52 +25,56 @@ body {
     position: absolute;
     bottom: 10px;
     right: 25px;
-    width: 290px;
-    background: linear-gradient(160deg, #353535 0%, #1c1c1c 30%, #252525 70%, #1a1a1a 100%);
-    border-radius: 18px;
+    width: 280px;
+    background: linear-gradient(160deg, #3a3a3a 0%, #252525 25%, #2a2a2a 50%, #1e1e1e 75%, #222 100%);
+    border-radius: 16px;
     box-shadow:
-        0 10px 40px rgba(0,0,0,0.8),
-        inset 0 1px 0 rgba(255,255,255,0.06),
-        0 0 0 2.5px #0d0d0d,
-        inset 0 -2px 6px rgba(0,0,0,0.3);
+        0 8px 30px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 0 0 2px #111,
+        inset 0 -1px 3px rgba(0,0,0,0.4);
     pointer-events: all;
     overflow: visible;
-    padding-bottom: 16px;
+    padding-bottom: 14px;
 }
 
 /* ===== ANTENNA ===== */
 .radio-antenna {
     position: absolute;
-    top: -110px;
-    left: 45px;
+    top: -120px;
+    left: 35px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    transform: rotate(-8deg);
 }
 .antenna-tip {
-    width: 16px;
-    height: 28px;
-    background: linear-gradient(180deg, #2a1a2e, #3d2845, #2a1a2e);
-    border-radius: 8px 8px 5px 5px;
+    width: 20px;
+    height: 50px;
+    background: linear-gradient(180deg, #2e1e33, #3d2845, #352040);
+    border-radius: 10px 10px 6px 6px;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
 }
 .antenna-rod {
-    width: 7px;
-    height: 82px;
-    background: linear-gradient(90deg, #2a2a2a, #4a4a4a, #2a2a2a);
+    width: 8px;
+    height: 70px;
+    background: linear-gradient(90deg, #333, #5a5a5a, #333);
     border-radius: 2px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
 }
 
 /* ===== TOP KNOB ===== */
 .radio-knob-top {
     position: absolute;
-    top: -20px;
-    right: 30px;
-    width: 30px;
-    height: 38px;
-    background: linear-gradient(180deg, #3a3a3a, #222, #3a3a3a);
-    border-radius: 5px;
-    border: 1px solid #444;
+    top: -22px;
+    right: 25px;
+    width: 38px;
+    height: 42px;
+    background: linear-gradient(180deg, #444, #2a2a2a, #3a3a3a);
+    border-radius: 6px;
+    border: 1px solid #555;
     overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 .knob-ridges {
     width: 100%;
@@ -79,8 +83,8 @@ body {
         0deg,
         transparent 0px,
         transparent 3px,
-        rgba(0,0,0,0.35) 3px,
-        rgba(0,0,0,0.35) 4.5px
+        rgba(0,0,0,0.4) 3px,
+        rgba(0,0,0,0.4) 5px
     );
 }
 
@@ -89,21 +93,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px 6px;
+    padding: 14px 14px 5px;
 }
 .brand-name {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    color: #999;
-    letter-spacing: 4px;
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 3px;
     font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 .header-icons {
     display: flex;
-    gap: 10px;
-    color: #888;
-    font-size: 13px;
+    gap: 8px;
+    color: #999;
+    font-size: 12px;
 }
 .header-icons .fa-battery-full.low,
 .header-icons .fa-battery-empty {
@@ -112,25 +115,21 @@ body {
 
 /* ===== LED ===== */
 .radio-led-row {
-    display: flex;
-    justify-content: center;
-    padding: 0 16px 5px;
+    display: none;
 }
 .radio-led {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #333;
-    transition: background 0.3s;
-    box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 .radio-led.connected {
     background: #00cc44;
-    box-shadow: 0 0 10px rgba(0,204,68,0.7);
+    box-shadow: 0 0 8px rgba(0,204,68,0.6);
 }
 .radio-led.jammed {
     background: #cc0000;
-    box-shadow: 0 0 10px rgba(204,0,0,0.7);
+    box-shadow: 0 0 8px rgba(204,0,0,0.6);
     animation: blink 1s infinite;
 }
 @keyframes blink {
@@ -140,37 +139,28 @@ body {
 
 /* ===== SCREEN ===== */
 .radio-screen {
-    margin: 0 12px;
-    background: linear-gradient(155deg, #ddd5c5 0%, #d4ccba 30%, #cec6b2 60%, #c8c0ac 100%);
+    margin: 2px 10px 0;
+    background: #c8c0b0;
+    background-image:
+        radial-gradient(ellipse at 20% 80%, rgba(0,0,0,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 20%, rgba(0,0,0,0.05) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 30% 40%, rgba(0,0,0,0.03) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04) 0%, transparent 25%);
     border-radius: 8px;
-    min-height: 340px;
-    border: 3px solid #111;
+    min-height: 320px;
+    border: 3px solid #1a1a1a;
     box-shadow:
-        inset 0 2px 10px rgba(0,0,0,0.12),
-        inset 0 0 30px rgba(0,0,0,0.04);
+        inset 0 2px 8px rgba(0,0,0,0.15),
+        inset 0 0 20px rgba(0,0,0,0.05);
     overflow: hidden;
     position: relative;
-}
-.radio-screen::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(ellipse at 15% 85%, rgba(0,0,0,0.04) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 15%, rgba(0,0,0,0.05) 0%, transparent 40%),
-        radial-gradient(ellipse at 40% 60%, rgba(0,0,0,0.02) 0%, transparent 60%),
-        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.03) 0%, transparent 30%);
-    pointer-events: none;
-    z-index: 1;
 }
 
 /* ===== PAGES ===== */
 .page {
     display: none;
-    padding: 12px;
+    padding: 10px;
     height: 100%;
     position: relative;
     z-index: 2;
@@ -180,57 +170,66 @@ body {
     flex-direction: column;
 }
 .page-title {
-    font-size: 18px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
     color: #5c1010;
     text-align: center;
     padding: 8px 0 10px;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     border-bottom: 1.5px solid rgba(92,16,16,0.15);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 .page-back {
     margin-top: auto;
-    padding-top: 8px;
+    padding-top: 6px;
 }
 .back-btn {
     width: 100%;
-    font-size: 15px;
+    font-size: 9px;
     padding: 10px;
-    letter-spacing: 1px;
 }
 
 /* ===== LCD BUTTONS ===== */
 .lcd-btn {
-    background: linear-gradient(180deg, #e8e0d0 0%, #dcd4c2 40%, #d0c8b4 100%);
-    border: 2.5px solid #b0a890;
+    background: linear-gradient(180deg, #d8d0c2 0%, #ccc4b4 50%, #c4bca8 100%);
+    border: 2.5px solid #9a9280;
+    border-top-color: #b0a890;
+    border-left-color: #b0a890;
+    border-right-color: #8a8270;
+    border-bottom-color: #8a8270;
     border-radius: 6px;
     color: #5c1010;
-    font-family: 'Silkscreen', 'VT323', monospace;
-    font-size: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
     cursor: pointer;
     padding: 10px 8px;
     text-align: center;
-    letter-spacing: 1px;
     box-shadow:
-        0 3px 0 #a09880,
-        inset 0 1px 0 rgba(255,255,255,0.35);
+        2px 3px 0 rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 2px rgba(0,0,0,0.05);
     transition: all 0.08s;
-    line-height: 1.3;
+    line-height: 1.4;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 .lcd-btn:hover {
-    background: linear-gradient(180deg, #f0e8d8 0%, #e4dcc8 100%);
-    border-color: #a89870;
+    background: linear-gradient(180deg, #e0d8c8 0%, #d4ccb8 100%);
 }
 .lcd-btn:active {
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow:
+        inset 0 2px 5px rgba(0,0,0,0.2),
+        0 1px 0 rgba(0,0,0,0.1);
     transform: translateY(2px);
+    border-top-color: #8a8270;
+    border-left-color: #8a8270;
+    border-right-color: #b0a890;
+    border-bottom-color: #b0a890;
 }
 .lcd-btn i {
-    font-size: 24px;
+    font-size: 18px;
 }
 
 /* ===== HOME ROWS ===== */
@@ -246,80 +245,84 @@ body {
 /* Row 1: Status + Refresh */
 .status-btn {
     flex: 1;
-    font-size: 18px;
-    padding: 16px 10px;
-    letter-spacing: 2px;
-    font-weight: bold;
+    font-size: 11px;
+    padding: 14px 6px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .refresh-btn {
-    width: 62px;
+    width: 56px;
     flex-shrink: 0;
-    padding: 16px 8px;
+    padding: 14px 8px;
 }
 .refresh-btn i {
-    font-size: 26px;
+    font-size: 20px;
 }
 
 /* Row 2-3: Online + Stack */
 .row-main {
     flex: 1;
-    min-height: 140px;
+    min-height: 130px;
 }
 .online-btn {
-    flex: 0.85;
-    gap: 4px;
-    font-size: 16px;
-    padding: 14px 8px;
+    flex: 0.9;
+    gap: 6px;
+    padding: 12px 8px;
 }
 .online-btn .lcd-label {
-    font-size: 17px;
-    letter-spacing: 3px;
+    font-size: 10px;
+    letter-spacing: 2px;
 }
-.online-btn i {
-    font-size: 32px;
-    margin: 6px 0;
+.online-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.online-row i {
+    font-size: 24px;
 }
 .online-btn .online-num {
-    font-size: 32px;
+    font-size: 20px;
     font-weight: bold;
 }
 .right-stack {
-    flex: 1.15;
+    flex: 1.1;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 .stack-btn {
     flex: 1;
-    font-size: 14px;
+    font-size: 10px;
     letter-spacing: 1px;
     padding: 10px 6px;
-    overflow: hidden;
 }
 
 /* Row 4: Sound + Recent */
 .row-bottom {
-    min-height: 55px;
+    min-height: 50px;
 }
 .sound-btn {
     width: 62px;
     flex-shrink: 0;
-    padding: 14px 8px;
+    padding: 12px 8px;
 }
 .sound-btn i {
-    font-size: 28px;
+    font-size: 22px;
 }
 .recent-btn {
     flex: 1;
-    font-size: 17px;
-    letter-spacing: 3px;
+    font-size: 11px;
+    letter-spacing: 2px;
     padding: 14px 8px;
 }
 
 /* ===== MEMBERS ===== */
 .member-list {
     flex: 1;
-    max-height: 230px;
+    max-height: 220px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #a09880 transparent;
@@ -328,9 +331,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 10px;
+    padding: 7px 8px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
-    font-size: 15px;
+    font-size: 9px;
     color: #5c1010;
 }
 .member-item .name {
@@ -341,8 +344,8 @@ body {
 }
 .member-item .talking-icon {
     color: #888;
-    font-size: 14px;
-    margin-right: 8px;
+    font-size: 11px;
+    margin-right: 6px;
     opacity: 0.3;
 }
 .member-item .talking-icon.active {
@@ -359,22 +362,17 @@ body {
     border: none;
     color: #5c1010;
     cursor: pointer;
-    font-size: 13px;
-    padding: 2px 6px;
+    font-size: 11px;
+    padding: 2px 4px;
     opacity: 0.5;
 }
-.member-item .mute-btn:hover {
-    opacity: 1;
-}
-.member-item .mute-btn.muted {
-    color: #cc0000;
-    opacity: 1;
-}
+.member-item .mute-btn:hover { opacity: 1; }
+.member-item .mute-btn.muted { color: #cc0000; opacity: 1; }
 
 /* ===== FAVORITES & RECENT ===== */
 .fav-list, .recent-list {
     flex: 1;
-    max-height: 230px;
+    max-height: 220px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #a09880 transparent;
@@ -383,85 +381,79 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 9px 12px;
+    padding: 8px 10px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
-    font-size: 16px;
+    font-size: 10px;
     color: #5c1010;
     cursor: pointer;
 }
-.channel-item:hover {
-    background: rgba(92,16,16,0.06);
-}
-.channel-item .ch-freq {
-    font-size: 17px;
-    letter-spacing: 1px;
-}
+.channel-item:hover { background: rgba(92,16,16,0.06); }
+.channel-item .ch-freq { font-size: 11px; }
 .channel-item .ch-name {
-    font-size: 13px;
+    font-size: 8px;
     color: #8b6060;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 .empty-msg {
     text-align: center;
     color: #8b6060;
-    font-size: 15px;
-    padding: 30px 0;
-    letter-spacing: 2px;
+    font-size: 9px;
+    padding: 25px 0;
 }
 
 /* ===== SETTINGS ===== */
 .settings-content {
     flex: 1;
-    padding: 4px 4px;
+    padding: 2px 2px;
 }
 .setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 4px;
+    padding: 7px 2px;
     border-bottom: 1px solid rgba(92,16,16,0.1);
 }
 .setting-row label {
-    font-size: 13px;
+    font-size: 8px;
     color: #5c1010;
-    letter-spacing: 1px;
-    min-width: 75px;
+    min-width: 65px;
 }
 .setting-row input[type="range"] {
     flex: 1;
-    margin: 0 8px;
+    margin: 0 6px;
     accent-color: #5c1010;
     height: 4px;
 }
 .setting-row #volumeVal {
-    font-size: 15px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
     color: #5c1010;
-    min-width: 40px;
+    min-width: 36px;
     text-align: right;
 }
 .setting-row input[type="text"] {
     flex: 1;
-    background: rgba(255,255,255,0.3);
-    border: 1.5px solid #a09880;
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-family: 'VT323', monospace;
-    font-size: 15px;
+    background: rgba(255,255,255,0.25);
+    border: 2px solid #9a9280;
+    border-radius: 4px;
+    padding: 4px 6px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
     color: #5c1010;
     outline: none;
-    margin-left: 8px;
+    margin-left: 6px;
 }
 .small-btn {
-    font-size: 13px;
-    padding: 5px 12px;
-    min-width: 55px;
+    font-size: 8px;
+    padding: 5px 8px;
+    min-width: 45px;
 }
 .save-btn {
     width: 100%;
-    margin-top: 12px;
-    font-size: 16px;
+    margin-top: 10px;
+    font-size: 10px;
     padding: 10px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
 }
 
 /* ===== CHANNEL INPUT ===== */
@@ -474,68 +466,68 @@ body {
 }
 .freq-display {
     width: 100%;
-    background: rgba(0,0,0,0.08);
-    border: 2px solid #a09880;
+    background: rgba(0,0,0,0.06);
+    border: 2px solid #9a9280;
     border-radius: 5px;
-    padding: 12px;
-    font-size: 34px;
+    padding: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
     color: #5c1010;
     text-align: right;
-    letter-spacing: 4px;
-    margin-bottom: 10px;
-    min-height: 55px;
-    font-family: 'VT323', monospace;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    min-height: 45px;
 }
 .numpad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    gap: 5px;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 .num-btn {
-    background: linear-gradient(180deg, #e8e0d0 0%, #d4cbb8 100%);
-    border: 2.5px solid #b0a890;
-    border-radius: 6px;
+    background: linear-gradient(180deg, #d8d0c2 0%, #c4bca8 100%);
+    border: 2.5px solid #9a9280;
+    border-top-color: #b0a890;
+    border-left-color: #b0a890;
+    border-right-color: #8a8270;
+    border-bottom-color: #8a8270;
+    border-radius: 5px;
     color: #5c1010;
-    font-family: 'Silkscreen', 'VT323', monospace;
-    font-size: 24px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
     padding: 10px;
     cursor: pointer;
-    box-shadow: 0 3px 0 #a09880;
+    box-shadow: 2px 3px 0 rgba(0,0,0,0.15);
     transition: all 0.08s;
 }
-.num-btn:hover {
-    background: linear-gradient(180deg, #f0e8d8, #ddd4c0);
-}
+.num-btn:hover { background: linear-gradient(180deg, #e0d8c8, #ccc4b4); }
 .num-btn:active {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
     transform: translateY(2px);
 }
-.num-clear {
-    color: #8b0000;
-}
+.num-clear { color: #8b0000; }
 .connect-btn {
     width: 100%;
-    font-size: 18px;
+    font-size: 11px;
     padding: 12px;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
 }
 
 /* ===== BOTTOM NAV ===== */
 .radio-nav {
     display: flex;
     justify-content: space-around;
-    padding: 10px 14px 6px;
-    margin: 0 12px;
+    padding: 8px 12px 4px;
+    margin: 0 10px;
 }
 .nav-btn {
     background: none;
     border: none;
     color: #666;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
-    padding: 6px 18px;
+    padding: 4px 14px;
     transition: color 0.2s;
 }
 .nav-btn:hover, .nav-btn.active {
@@ -547,73 +539,71 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 22px 10px;
+    padding: 12px 18px 8px;
 }
 .phys-btn {
     border: none;
     cursor: pointer;
     transition: transform 0.08s;
 }
-.phys-btn:active {
-    transform: scale(0.9);
-}
+.phys-btn:active { transform: scale(0.92); }
 .star-btn {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
-    color: #777;
-    font-size: 22px;
+    background: linear-gradient(145deg, #555, #2e2e2e);
+    color: #888;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow:
         0 4px 10px rgba(0,0,0,0.5),
-        inset 0 2px 0 rgba(255,255,255,0.08),
+        inset 0 2px 0 rgba(255,255,255,0.1),
         inset 0 -2px 4px rgba(0,0,0,0.3);
 }
 .star-btn.faved {
     color: #ffcc00;
-    text-shadow: 0 0 8px rgba(255,204,0,0.3);
+    text-shadow: 0 0 6px rgba(255,204,0,0.3);
 }
 .phys-knobs {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 .knob-slider {
     width: 14px;
-    height: 40px;
-    background: linear-gradient(90deg, #222, #555, #222);
+    height: 38px;
+    background: linear-gradient(90deg, #252525, #555, #252525);
     border-radius: 4px;
     border: 1px solid #1a1a1a;
     box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
 }
 .call-btns {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 .call-green, .call-red {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
 }
 .btn-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
 }
 .green-dot {
     background: radial-gradient(circle at 40% 40%, #44ee66, #00aa22);
-    box-shadow: 0 0 8px rgba(0,204,68,0.5);
+    box-shadow: 0 0 6px rgba(0,204,68,0.5);
 }
 .red-dot {
     background: radial-gradient(circle at 40% 40%, #ee4444, #aa0000);
-    box-shadow: 0 0 8px rgba(204,0,0,0.5);
+    box-shadow: 0 0 6px rgba(204,0,0,0.5);
 }
 
 /* ===== NOTIFY ===== */
@@ -624,10 +614,9 @@ body {
     right: 0;
     background: rgba(92,16,16,0.92);
     color: #e8e0d0;
-    font-size: 14px;
-    padding: 10px 14px;
+    font-size: 9px;
+    padding: 10px 12px;
     text-align: center;
-    letter-spacing: 1px;
     z-index: 20;
     animation: slideDown 0.3s ease;
 }
@@ -650,9 +639,9 @@ body {
     backdrop-filter: blur(4px);
 }
 .overlay-header {
-    font-size: 13px;
+    font-size: 9px;
     color: #cc3333;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(204,51,51,0.3);
     margin-bottom: 5px;
@@ -662,12 +651,12 @@ body {
     align-items: center;
     gap: 8px;
     padding: 3px 0;
-    font-size: 14px;
+    font-size: 9px;
     color: #ccc;
 }
 .overlay-item .ov-talking {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #555;
     flex-shrink: 0;
@@ -678,13 +667,6 @@ body {
 }
 
 /* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {
-    width: 4px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: #a09880;
-    border-radius: 2px;
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #a09880; border-radius: 2px; }
