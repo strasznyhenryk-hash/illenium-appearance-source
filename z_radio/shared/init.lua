@@ -13,7 +13,6 @@ end
 ---@field Debug boolean
 ---@field Overlay 'default'|'always'|'never'
 
----@type Shared
 Shared = {
     Ready = true,
     UseCommand = true,

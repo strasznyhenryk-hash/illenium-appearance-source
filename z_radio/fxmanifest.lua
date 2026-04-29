@@ -2,8 +2,8 @@ fx_version 'cerulean'
 game "gta5"
 
 author "ZRadio"
-version '1.0.0'
-description 'ZRadio - Oldschool Radio for FiveM'
+version '2.0.0'
+description 'ZRadio - Oldschool Radio with Battery & Break System'
 
 lua54 'yes'
 

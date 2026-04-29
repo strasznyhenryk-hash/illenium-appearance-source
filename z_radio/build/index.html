@@ -31,6 +31,21 @@
                 <!-- NOTIFY -->
                 <div id="notify" class="notify-bar" style="display:none;"></div>
 
+                <!-- BROKEN RADIO BLACKSCREEN -->
+                <div class="page" id="pageBroken">
+                    <div class="broken-screen">
+                        <div class="broken-static"></div>
+                        <div class="broken-text">USZKODZONE</div>
+                        <div class="broken-subtext">Radio nie dziala</div>
+                    </div>
+                </div>
+
+                <!-- BATTERY DRAIN ANIMATION OVERLAY -->
+                <div id="batteryDrainOverlay" class="battery-drain-overlay" style="display:none;">
+                    <i class="fas fa-battery-quarter battery-drain-icon"></i>
+                    <span class="battery-drain-text">ROZLADOWYWANIE...</span>
+                </div>
+
                 <!-- PAGE: HOME -->
                 <div class="page active" id="pageHome">
                     <!-- Row 1: Status + Refresh -->
@@ -177,7 +192,7 @@
 
         <!-- OVERLAY LIST -->
         <div id="overlay" class="overlay" style="display:none;">
-            <div class="overlay-header">ZRADIO OVERLAY</div>
+            <div class="overlay-header">TELCLEF OVERLAY</div>
             <div class="overlay-list" id="overlayList"></div>
         </div>
     </div>
