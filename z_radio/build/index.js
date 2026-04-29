@@ -21,7 +21,8 @@
         mutedPlayers: {},
         freqInput: "",
         currentPage: "pageHome",
-        showOverlay: false
+        showOverlay: false,
+        isBroken: false
     };
 
     /* ===== DOM REFS ===== */
@@ -46,6 +47,7 @@
     const btnToggleOverlay = $("btnToggleOverlay");
     const btnAllowMove = $("btnAllowMove");
     const btnEnableClicks = $("btnEnableClicks");
+    const batteryDrainOverlay = $("batteryDrainOverlay");
 
     /* ===== NUI FETCH ===== */
     function nuiCallback(name, data) {
@@ -58,6 +60,8 @@
 
     /* ===== PAGE NAVIGATION ===== */
     function showPage(pageId) {
+        if (state.isBroken && pageId !== "pageBroken") return;
+
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
         const page = $(pageId);
         if (page) page.classList.add("active");
@@ -70,7 +74,8 @@
             pageSettings: "navSettings",
             pageMembers: "navHome",
             pageFavorites: "navHome",
-            pageRecent: "navHome"
+            pageRecent: "navHome",
+            pageBroken: null
         };
         const navId = navMap[pageId];
         if (navId) $(navId).classList.add("active");
@@ -78,6 +83,8 @@
 
     /* ===== UPDATE UI ===== */
     function updateStatusDisplay() {
+        if (state.isBroken) return;
+
         if (state.onRadio && state.channel > 0) {
             const chName = getChannelName(state.channel);
             statusText.textContent = "POLACZONO: " + state.channel.toFixed(2);
@@ -292,6 +299,24 @@
         volumeVal.textContent = state.volume + "%";
     }
 
+    /* ===== BROKEN RADIO STATE ===== */
+    function showBrokenScreen() {
+        state.isBroken = true;
+        document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+        $("pageBroken").classList.add("active");
+        document.querySelectorAll(".nav-btn").forEach(b => {
+            b.classList.remove("active");
+            b.style.pointerEvents = "none";
+        });
+    }
+
+    function hideBrokenScreen() {
+        state.isBroken = false;
+        document.querySelectorAll(".nav-btn").forEach(b => {
+            b.style.pointerEvents = "";
+        });
+    }
+
     /* ===== NUI MESSAGE HANDLER ===== */
     window.addEventListener("message", function (event) {
         const msg = event.data;
@@ -314,11 +339,18 @@
                 state.overlay = d.overlay || "default";
                 state.insideJammer = d.insideJammerZone || false;
                 state.radioId = d.radioId || null;
+                state.isBroken = d.isBroken || false;
 
                 app.style.display = "block";
-                showPage("pageHome");
-                updateStatusDisplay();
-                loadSettings();
+
+                if (state.isBroken) {
+                    showBrokenScreen();
+                } else {
+                    hideBrokenScreen();
+                    showPage("pageHome");
+                    updateStatusDisplay();
+                    loadSettings();
+                }
 
                 nuiCallback("getMutedList", null).then(result => {
                     if (result) state.mutedPlayers = result;
@@ -381,6 +413,26 @@
 
             case "UpdateTime":
                 break;
+
+            case "batteryUpdate": {
+                state.battery = msg.data;
+                updateBatteryIcon();
+                break;
+            }
+
+            case "batteryDrainAnim": {
+                if (msg.data) {
+                    batteryDrainOverlay.style.display = "flex";
+                } else {
+                    batteryDrainOverlay.style.display = "none";
+                }
+                break;
+            }
+
+            case "radioBroken": {
+                showBrokenScreen();
+                break;
+            }
         }
     });
 
@@ -389,6 +441,7 @@
     // Nav buttons
     document.querySelectorAll(".nav-btn").forEach(btn => {
         btn.addEventListener("click", () => {
+            if (state.isBroken) return;
             const page = btn.dataset.page;
             if (page) {
                 showPage(page);
@@ -399,6 +452,7 @@
 
     // Home buttons
     $("btnStatus").addEventListener("click", () => {
+        if (state.isBroken) return;
         if (state.onRadio) {
             showPage("pageChannel");
         } else {
@@ -407,6 +461,7 @@
     });
 
     $("btnReconnect").addEventListener("click", () => {
+        if (state.isBroken) return;
         if (state.onRadio) {
             nuiCallback("leave", null);
         } else {
@@ -415,21 +470,25 @@
     });
 
     $("btnOnline").addEventListener("click", () => {
+        if (state.isBroken) return;
         renderMembers();
         showPage("pageMembers");
     });
 
     $("btnMyRadios").addEventListener("click", () => {
+        if (state.isBroken) return;
         renderFavorites();
         showPage("pageFavorites");
     });
 
     $("btnSecure").addEventListener("click", () => {
+        if (state.isBroken) return;
         renderRecent();
         showPage("pageRecent");
     });
 
     $("btnSound").addEventListener("click", () => {
+        if (state.isBroken) return;
         if (state.volume > 0) {
             state.volume = 0;
             nuiCallback("toggleMute", 0);
@@ -443,16 +502,16 @@
     });
 
     $("btnRecent").addEventListener("click", () => {
+        if (state.isBroken) return;
         renderRecent();
         showPage("pageRecent");
     });
 
-    // Star button removed from HTML - favorites via MOJE RADIA page
-
-    // PTT button (positioned over physical button on overlay)
+    // PTT button
     const pttBtn = $("btnCallGreen");
     if (pttBtn) {
         pttBtn.addEventListener("click", () => {
+            if (state.isBroken) return;
             if (!state.onRadio) {
                 showPage("pageChannel");
             } else {
@@ -464,6 +523,7 @@
     // Numpad
     document.querySelectorAll(".num-btn").forEach(btn => {
         btn.addEventListener("click", () => {
+            if (state.isBroken) return;
             const num = btn.dataset.num;
             if (num === "C") {
                 state.freqInput = "";
@@ -478,6 +538,7 @@
 
     // Connect button
     $("btnConnect").addEventListener("click", () => {
+        if (state.isBroken) return;
         const freq = parseFloat(state.freqInput);
         if (!isNaN(freq) && freq > 0) {
             nuiCallback("join", freq);
@@ -521,11 +582,22 @@
 
     // Save settings
     $("btnSaveSettings").addEventListener("click", () => {
+        if (state.isBroken) return;
         const name = displayName.value.trim();
         if (name) {
             nuiCallback("saveData", { name: name });
         }
         showNotify("ZAPISANO", 2000);
+    });
+
+    // Back buttons
+    ["btnBackMembers", "btnBackFav", "btnBackRecent", "btnBackSettings", "btnBackChannel"].forEach(id => {
+        const btn = $(id);
+        if (btn) {
+            btn.addEventListener("click", () => {
+                showPage("pageHome");
+            });
+        }
     });
 
     // Close on Escape

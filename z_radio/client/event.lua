@@ -12,18 +12,23 @@ AddEventHandler('onResourceStop', function(resource)
     if GetCurrentResourceName() == resource then
         Radio:toggleRadioAnimation(false)
         Radio:RemoveJammerZone()
+        Radio:StopBatteryDrain()
         if Radio.onRadio then
             Radio:leaveradio()
         end
     end
 end)
 
+-- ========== USE WORKING RADIO ==========
+
 RegisterNetEvent('z_radio:client:use', function(slot)
     if Radio.PlayerDead or IsPedFatallyInjured(cache.ped) then return end
     Radio.usingRadio = true
+    Radio.isBroken = false
     SetNuiFocus(true, true)
     Radio:toggleRadioAnimation(true)
-    local battery, radioId = lib.callback.await('z_radio:server:getradiodata', false, slot)
+    local battery, radioId, usage = lib.callback.await('z_radio:server:getradiodata', false, slot)
+    Radio.batteryLevel = battery
     local userdata = Radio.userData[Radio.identifier]
     Radio:SendSvelteMessage("setRadioVisible", {
         radioId = radioId,
@@ -40,7 +45,9 @@ RegisterNetEvent('z_radio:client:use', function(slot)
         channelName = Shared.RadioNames,
         insideJammerZone = Radio.signalJammed,
         battery = battery,
-        overlay = Shared.Overlay
+        overlay = Shared.Overlay,
+        isBroken = false,
+        usage = usage or 0,
     })
     UpdateTime()
     if userdata.allowMovement then
@@ -48,6 +55,61 @@ RegisterNetEvent('z_radio:client:use', function(slot)
         DisableControls()
     end
 end)
+
+-- ========== USE BROKEN RADIO (blackscreen) ==========
+
+RegisterNetEvent('z_radio:client:useBroken', function()
+    if Radio.PlayerDead or IsPedFatallyInjured(cache.ped) then return end
+    Radio.usingRadio = true
+    Radio.isBroken = true
+    SetNuiFocus(true, true)
+    Radio:toggleRadioAnimation(true)
+    Radio:SendSvelteMessage("setRadioVisible", {
+        isBroken = true,
+        battery = 0,
+        onRadio = false,
+        channel = 0,
+        volume = 0,
+        favourite = {},
+        recomended = {},
+        userData = Radio.userData[Radio.identifier] or {},
+        time = Radio:CalculateTimeToDisplay(),
+        street = Radio:getCrossroads(),
+        maxChannel = Shared.MaxFrequency,
+        locale = Radio.locale,
+        channelName = Shared.RadioNames,
+        insideJammerZone = false,
+        overlay = Shared.Overlay,
+        usage = 0,
+    })
+end)
+
+-- ========== RADIO BROKEN EVENT (from server) ==========
+
+RegisterNetEvent('z_radio:client:radioBroken', function()
+    if Radio.onRadio then
+        Radio:leaveradio()
+    end
+    Radio.isBroken = true
+    Radio.hasRadio = false
+    Radio:SendSvelteMessage("radioBroken", true)
+
+    Framework.notify({
+        title = locale('radio_broken_title'),
+        description = locale('radio_broken_description'),
+        type = 'error',
+        duration = 8000,
+    })
+end)
+
+-- ========== BATTERY UPDATE ==========
+
+RegisterNetEvent('z_radio:client:batteryUpdate', function(level)
+    Radio.batteryLevel = level
+    Radio:SendSvelteMessage("batteryUpdate", level)
+end)
+
+-- ========== JAMMER EVENTS ==========
 
 RegisterNetEvent('z_radio:client:usejammer', function()
     if not Shared.Jammer.permission or not (lib.table.contains(Shared.Jammer.permission, Radio.PlayerJob) or lib.table.contains(Shared.Jammer.permission, Radio.PlayerGang)) then
@@ -73,7 +135,7 @@ end)
 RegisterNetEvent('z_radio:client:syncobject', function(data)
     local entity = NetworkGetEntityFromNetworkId(data.object)
     SetEntityCanBeDamaged(entity, data.canDamage)
-    Radio.jammer[#Radio.jammer+1] = {
+    Radio.jammer[#Radio.jammer + 1] = {
         id = data.id,
         entity = entity,
         coords = data.coords,
@@ -103,7 +165,7 @@ RegisterNetEvent('z_radio:client:syncobject', function(data)
 end)
 
 RegisterNetEvent('z_radio:client:changeJammerRange', function(id, range)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             entity.zone:remove()
@@ -124,7 +186,7 @@ RegisterNetEvent('z_radio:client:changeJammerRange', function(id, range)
 end)
 
 RegisterNetEvent('z_radio:client:removeallowedchannel', function(id, allowedChannels)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             entity.allowedChannels = allowedChannels
@@ -135,7 +197,7 @@ RegisterNetEvent('z_radio:client:removeallowedchannel', function(id, allowedChan
 end)
 
 RegisterNetEvent('z_radio:client:addallowedchannel', function(id, allowedChannels)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             entity.allowedChannels = allowedChannels
@@ -146,7 +208,7 @@ RegisterNetEvent('z_radio:client:addallowedchannel', function(id, allowedChannel
 end)
 
 RegisterNetEvent('z_radio:client:togglejammer', function(id, state)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             entity.enable = state
@@ -160,7 +222,6 @@ RegisterNetEvent('z_radio:client:togglejammer', function(id, state)
                     onEnter = OnEnterJammerZone,
                     onExit = OnExitJammerZone
                 })
-
             else
                 entity.zone:remove()
                 Radio:UpdateJammerRemove(id)
@@ -171,7 +232,7 @@ RegisterNetEvent('z_radio:client:togglejammer', function(id, state)
 end)
 
 RegisterNetEvent('z_radio:client:removejammer', function(id)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             entity.zone:remove()
@@ -182,9 +243,11 @@ RegisterNetEvent('z_radio:client:removejammer', function(id)
     end
 end)
 
+-- ========== CLOSE RADIO ==========
+
 RegisterNetEvent('z_radio:client:remove', function()
     SetNuiFocus(false, false)
-    if Radio.userData[Radio.identifier].allowMovement then
+    if Radio.userData[Radio.identifier] and Radio.userData[Radio.identifier].allowMovement then
         SetNuiFocusKeepInput(false)
     end
     Radio:toggleRadioAnimation(false)
@@ -194,19 +257,29 @@ RegisterNetEvent('z_radio:client:remove', function()
     end)
 end)
 
+-- ========== RADIO LIST UPDATE ==========
+
 RegisterNetEvent('z_radio:client:radioListUpdate', function(players, channel)
     if Radio.RadioChannel == channel then
         Radio:SendSvelteMessage("updateRadioList", players)
     end
 end)
 
+-- ========== NO CHARGE ==========
+
 RegisterNetEvent('z_radio:client:nocharge', function()
     Radio:leaveradio()
 end)
 
+-- ========== RECHARGE ==========
+
 RegisterNetEvent("z_radio:client:recharge", function()
+    Radio:PlayBatteryUseAnimation()
     TriggerServerEvent('z_radio:server:rechargeBattery')
+    Radio:Notify(locale('battery_recharged'))
 end)
+
+-- ========== VOICE EVENTS ==========
 
 RegisterNetEvent("pma-voice:radioActive", function(talkingState)
     Radio:SendSvelteMessage("updateRadioTalking", {
@@ -221,6 +294,8 @@ RegisterNetEvent("pma-voice:setTalkingOnRadio", function(source, talkingState)
         radioTalking = talkingState
     })
 end)
+
+-- ========== FRAMEWORK EVENTS ==========
 
 RegisterNetEvent('bl_bridge:client:playerLoaded', function()
     Radio.playerLoaded = true

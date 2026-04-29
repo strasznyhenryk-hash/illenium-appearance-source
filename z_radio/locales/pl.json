@@ -9,6 +9,9 @@
     "toggle_defean": "Radio wyciszone",
     "toggle_undeafen": "Radio odciszone",
     "failed_mute": "Nie udalo sie wyciszyc gracza",
+    "radio_broken_title": "Radio zepsute!",
+    "radio_broken_description": "Twoje radio sie zepsulo. Potrzebujesz nowego.",
+    "battery_recharged": "Bateria naladowana",
 
     "ui": {
         "header": "W RADIU",
@@ -29,6 +32,8 @@
         "move_radio": "Przesun radio",
         "allow_move": "Pozwol na ruch",
         "overlay_settings": "Ustawienia overlay",
-        "enableClicks": "Dzwiek radia"
+        "enableClicks": "Dzwiek radia",
+        "broken": "USZKODZONE",
+        "broken_desc": "Radio nie dziala"
     }
 }

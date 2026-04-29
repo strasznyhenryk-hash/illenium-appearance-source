@@ -22,21 +22,51 @@ Shared.Jammer = {
     }
 }
 
+---@class RadioItems
+---@field working string  -- item name for working radio
+---@field broken string   -- item name for broken radio
+---@field battery string  -- item name for battery/cell
+
+---@type RadioItems
+Shared.RadioItems = {
+    working = 'radio',
+    broken = 'radio_broken',
+    battery = 'radiocell',
+}
+
 ---@type string[]
 Shared.RadioItem = {
     'radio'
 }
 
 ---@class Battery
----@field state boolean
----@field consume number
----@field depletionTime number
+---@field state boolean           -- enable battery system
+---@field consume number          -- how much battery consumed per tick
+---@field drainInterval number    -- seconds between each drain tick
+---@field drainRate number        -- battery units drained per tick while radio is on
+---@field rechargeAmount number   -- how much battery restored by using radiocell
 
 ---@type Battery
 Shared.Battery = {
     state = true,
     consume = 1,
-    depletionTime = 1,
+    drainInterval = 60,       -- drain every 60 seconds
+    drainRate = 2,            -- drain 2% per tick
+    rechargeAmount = 100,     -- full recharge with battery item
+}
+
+---@class RadioBreak
+---@field enabled boolean             -- enable radio breaking mechanic
+---@field minUsageBeforeBreak number  -- minimum usage time in minutes before radio CAN break
+---@field breakChancePerTick number   -- chance (0-100) to break on each drain tick after minUsage
+---@field breakOnEmpty boolean        -- instantly break when battery reaches 0
+
+---@type RadioBreak
+Shared.RadioBreak = {
+    enabled = true,
+    minUsageBeforeBreak = 120,    -- 2 hours minimum usage before break possible
+    breakChancePerTick = 5,       -- 5% chance per drain tick after min usage
+    breakOnEmpty = true,          -- radio breaks when battery hits 0
 }
 
 ---@type [string]: string

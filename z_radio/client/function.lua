@@ -1,7 +1,7 @@
 local insideJammer = false
 
 function IsJammerAllowed(id, channel)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         local entity = Radio.jammer[i]
         if entity.id == id then
             return lib.table.contains(entity.allowedChannels, channel)
@@ -10,7 +10,7 @@ function IsJammerAllowed(id, channel)
 end
 
 function Radio:Notify(msg, duration)
-    self:SendSvelteMessage("notify", {msg = msg, duration = duration or 5000})
+    self:SendSvelteMessage("notify", { msg = msg, duration = duration or 5000 })
 end
 
 function Radio:connectSound()
@@ -27,7 +27,7 @@ function Radio:SplitStr(inputstr, sep)
     end
     local t = {}
     for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        t[#t+1] = str
+        t[#t + 1] = str
     end
     return t
 end
@@ -76,19 +76,20 @@ function Radio:Init(data)
         self.PlayerGang = player.gang.name
     end
     if not self.userData[self.identifier] then self:SetDefaultData(self.identifier) end
-    self.userData[self.identifier].name = self.userData[self.identifier].name or player.firstName .. " " .. player.lastName
+    self.userData[self.identifier].name = self.userData[self.identifier].name or
+        player.firstName .. " " .. player.lastName
     local rec = {}
     for k, v in pairs(Shared.RestrictedChannels) do
         if v.type == 'job' and lib.table.contains(v.name, self.PlayerJob) then
-            rec[#rec+1] = k
+            rec[#rec + 1] = k
         elseif v.type == 'gang' and lib.table.contains(v.name, self.PlayerGang) then
-            rec[#rec+1] = k
+            rec[#rec + 1] = k
         end
     end
     self.favourite = rec
     for _, val in ipairs(self.userData[self.identifier].favourite) do
         if not lib.table.contains(self.favourite, val) then
-            self.favourite[#self.favourite+1] = val
+            self.favourite[#self.favourite + 1] = val
         end
     end
 
@@ -109,16 +110,19 @@ function Radio:connecttoradio(channel)
         exports["pma-voice"]:setVoiceProperty("radioEnabled", true)
     end
     exports["pma-voice"]:setRadioChannel(channel)
-    TriggerServerEvent('z_radio:server:addToRadioChannel', self.RadioChannel, self.userData[self.identifier].name)
+    TriggerServerEvent('z_radio:server:addToRadioChannel', self.RadioChannel,
+        self.userData[self.identifier].name)
     self:connectSound()
     self:Notify(locale('join_notify_description', channel))
     if not lib.table.contains(Radio.recomended, channel) then
-        Radio.recomended[#Radio.recomended+1] = channel
+        Radio.recomended[#Radio.recomended + 1] = channel
     end
     if self.insideJammer then
         Radio.signalJammed = false
         Radio:SendSvelteMessage("insideJammer", false)
     end
+
+    self:StartBatteryDrain()
 end
 
 function Radio:doRadioCheck(items)
@@ -130,7 +134,8 @@ function Radio:doRadioCheck(items)
         if lib.table.contains(Shared.RadioItem, v.name) then
             self.hasRadio = true
             if v.metadata?.radioId or v.info?.radioId then
-                self.batteryData[#self.batteryData+1] = v[Shared.Inventory == 'ox' and 'metadata' or 'info'].radioId
+                self.batteryData[#self.batteryData + 1] = v[Shared.Inventory == 'ox' and 'metadata' or 'info']
+                    .radioId
             end
         end
     end
@@ -146,11 +151,13 @@ function Radio:leaveradio()
     self.onRadio = false
     exports["pma-voice"]:setRadioChannel(0)
     exports["pma-voice"]:setVoiceProperty("radioEnabled", false)
+    self:StopBatteryDrain()
     self:update()
 end
 
 function Radio:update()
-    local battery, radioId = lib.callback.await('z_radio:server:getradiodata', false)
+    local battery, radioId, usage = lib.callback.await('z_radio:server:getradiodata', false)
+    self.batteryLevel = battery
     self:SendSvelteMessage("updateRadio", {
         radioId = radioId,
         onRadio = Radio.onRadio,
@@ -169,63 +176,107 @@ function Radio:update()
     })
 end
 
-function Radio:toggleRadioAnimation(pState)
-    lib.requestAnimDict('cellphone@')
-	if pState then
-		TriggerEvent("attachItemRadio", "radio01")
-		TaskPlayAnim(cache.ped, "cellphone@", "cellphone_text_read_base", 2.0, 3.0, -1, 49, 0, false, false, false)
-		self.radioProp = CreateObject(`prop_cs_hand_radio`, 1.0, 1.0, 1.0, true, true, false)
-		AttachEntityToEntity(self.radioProp, cache.ped, GetPedBoneIndex(cache.ped, 57005), 0.14, 0.01, -0.02, 110.0, 120.0, -15.0, true, false, false, false, 2, true)
-	else
-		StopAnimTask(cache.ped, "cellphone@", "cellphone_text_read_base", 1.0)
-		ClearPedTasks(cache.ped)
-		if self.radioProp ~= 0 then
-			DeleteObject(self.radioProp)
-			self.radioProp = 0
-		end
-	end
+-- ========== BATTERY DRAIN THREAD ==========
+
+function Radio:StartBatteryDrain()
+    if self.drainThread then return end
+    if not Shared.Battery.state then return end
+
+    self.drainThread = true
+    CreateThread(function()
+        while self.onRadio and self.drainThread do
+            Wait(Shared.Battery.drainInterval * 1000)
+            if not self.onRadio or not self.drainThread then break end
+
+            if #self.batteryData > 0 then
+                TriggerServerEvent('z_radio:server:consumeBattery', self.batteryData)
+
+                self:SendSvelteMessage("batteryDrainAnim", true)
+                Wait(1500)
+                self:SendSvelteMessage("batteryDrainAnim", false)
+            end
+        end
+        self.drainThread = nil
+    end)
 end
 
+function Radio:StopBatteryDrain()
+    self.drainThread = nil
+end
+
+-- ========== RADIO ANIMATION ==========
+
+function Radio:toggleRadioAnimation(pState)
+    lib.requestAnimDict('cellphone@')
+    if pState then
+        TriggerEvent("attachItemRadio", "radio01")
+        TaskPlayAnim(cache.ped, "cellphone@", "cellphone_text_read_base", 2.0, 3.0, -1, 49, 0, false, false, false)
+        self.radioProp = CreateObject(`prop_cs_hand_radio`, 1.0, 1.0, 1.0, true, true, false)
+        AttachEntityToEntity(self.radioProp, cache.ped, GetPedBoneIndex(cache.ped, 57005), 0.14, 0.01, -0.02, 110.0,
+            120.0, -15.0, true, false, false, false, 2, true)
+    else
+        StopAnimTask(cache.ped, "cellphone@", "cellphone_text_read_base", 1.0)
+        ClearPedTasks(cache.ped)
+        if self.radioProp ~= 0 then
+            DeleteObject(self.radioProp)
+            self.radioProp = 0
+        end
+    end
+end
+
+-- ========== BATTERY USE ANIMATION ==========
+
+function Radio:PlayBatteryUseAnimation()
+    lib.requestAnimDict('mp_common')
+    TaskPlayAnim(cache.ped, "mp_common", "givetake1_a", 2.0, 2.0, 1500, 49, 0, false, false, false)
+    Wait(1500)
+end
+
+-- ========== TIME ==========
+
 function Radio:CalculateTimeToDisplay()
-	local hour = GetClockHours()
+    local hour = GetClockHours()
     local minute = GetClockMinutes()
     local second = GetClockSeconds()
 
     local obj = ""
 
-	if minute <= 9 then
-		minute = "0" .. minute
+    if minute <= 9 then
+        minute = "0" .. minute
     end
 
-    obj = hour..":"..minute
+    obj = hour .. ":" .. minute
 
     return obj, (60 - second)
 end
 
+-- ========== JAMMER FUNCTIONS ==========
+
 function Radio:RemoveJammerZone()
-    for i=1, #self.jammer do
+    for i = 1, #self.jammer do
         self.jammer[i].zone:remove()
         self.jammer[i].zoneJammer:remove()
     end
 end
 
 function Radio:OpenJammerConfig(id)
-    for i=1, #Radio.jammer do
+    for i = 1, #Radio.jammer do
         if Radio.jammer[i].id == id then
             local isDamaged = GetEntityHealth(Radio.jammer[i].entity) <= 0
             lib.registerContext({
                 id = 'jammer_menu',
                 title = 'Konfiguracja Jammera',
-                onExit = function ()
+                onExit = function()
                     if insideJammer then lib.showTextUI('[E] Konfiguruj Jammer') end
                 end,
                 options = {
                     {
                         title = 'Przelacz Jammer',
-                        description = 'Wlacz/Wylacz jammer, Stan: '..(Radio.jammer[i].enable and 'Wlaczony' or 'Wylaczony'),
+                        description = 'Wlacz/Wylacz jammer, Stan: ' ..
+                            (Radio.jammer[i].enable and 'Wlaczony' or 'Wylaczony'),
                         disabled = isDamaged,
                         icon = 'fa-toggle-on',
-                        onSelect = function ()
+                        onSelect = function()
                             TriggerServerEvent('z_radio:server:togglejammer', Radio.jammer[i].id)
                             lib.showTextUI('[E] Konfiguruj Jammer')
                         end
@@ -235,7 +286,7 @@ function Radio:OpenJammerConfig(id)
                         description = 'Usun ten jammer',
                         icon = 'fa-trash',
                         disabled = not Radio.jammer[i].canRemove,
-                        onSelect = function ()
+                        onSelect = function()
                             TriggerServerEvent('z_radio:server:removejammer', Radio.jammer[i].id, isDamaged)
                         end
                     },
@@ -244,7 +295,7 @@ function Radio:OpenJammerConfig(id)
                         description = 'Zmien zasieg tego jammera',
                         icon = 'fa-ruler',
                         disabled = isDamaged,
-                        onSelect = function ()
+                        onSelect = function()
                             local input = lib.inputDialog('Konfiguracja Jammera', {
                                 {
                                     type = 'slider',
@@ -267,36 +318,38 @@ function Radio:OpenJammerConfig(id)
                         description = 'Konfiguruj dozwolone kanaly dla tego jammera',
                         icon = 'fa-circle-check',
                         disabled = isDamaged,
-                        onSelect = function ()
+                        onSelect = function()
                             local allowedChannels = {
                                 id = 'jammer_allowed_channel',
                                 title = 'Dozwolone Kanaly',
                                 menu = 'jammer_menu',
                                 options = {}
                             }
-                            for j=1, #Radio.jammer[i].allowedChannels do
-                                allowedChannels.options[#allowedChannels.options+1] = {
-                                    title = 'Kanal '..Radio.jammer[i].allowedChannels[j],
+                            for j = 1, #Radio.jammer[i].allowedChannels do
+                                allowedChannels.options[#allowedChannels.options + 1] = {
+                                    title = 'Kanal ' .. Radio.jammer[i].allowedChannels[j],
                                     description = 'Usun ten kanal z dozwolonych',
                                     icon = 'fa-trash',
-                                    onSelect = function ()
+                                    onSelect = function()
                                         table.remove(Radio.jammer[i].allowedChannels, j)
-                                        TriggerServerEvent('z_radio:server:removeallowedchannel', Radio.jammer[i].id, Radio.jammer[i].allowedChannels)
+                                        TriggerServerEvent('z_radio:server:removeallowedchannel',
+                                            Radio.jammer[i].id, Radio.jammer[i].allowedChannels)
                                         lib.showTextUI('[E] Konfiguruj Jammer')
                                     end
                                 }
                             end
-                            allowedChannels.options[#allowedChannels.options+1] = {
+                            allowedChannels.options[#allowedChannels.options + 1] = {
                                 title = 'Dodaj Kanal',
                                 description = 'Dodaj kanal do dozwolonych',
                                 icon = 'fa-circle-plus',
-                                onSelect = function ()
+                                onSelect = function()
                                     local input = lib.inputDialog('Dodaj Kanal', {
-                                        {type = 'number', label = 'Czestotliwosc Kanalu', description = 'Podaj czestotliwosc kanalu', icon = 'fa-wifi', precision = 2},
+                                        { type = 'number', label = 'Czestotliwosc Kanalu', description = 'Podaj czestotliwosc kanalu', icon = 'fa-wifi', precision = 2 },
                                     })
                                     if not input then return end
                                     table.insert(Radio.jammer[i].allowedChannels, input[1])
-                                    TriggerServerEvent('z_radio:server:addallowedchannel', Radio.jammer[i].id, Radio.jammer[i].allowedChannels)
+                                    TriggerServerEvent('z_radio:server:addallowedchannel', Radio.jammer[i].id,
+                                        Radio.jammer[i].allowedChannels)
                                     lib.showTextUI('[E] Konfiguruj Jammer')
                                 end
                             }
@@ -343,7 +396,7 @@ function UpdateTime()
         while Radio.usingRadio do
             local currentTime, nextUpdate = Radio:CalculateTimeToDisplay()
             Radio:SendSvelteMessage("UpdateTime", currentTime)
-            Wait(nextUpdate*1000)
+            Wait(nextUpdate * 1000)
         end
     end)
 end
@@ -367,7 +420,7 @@ function OnInsideJammerZone(data)
         while Radio.insideJammer do
             local isDamaged = GetEntityHealth(data.entity) <= 0
             if isDamaged then
-                for i=1, #Radio.jammer do
+                for i = 1, #Radio.jammer do
                     local entity = Radio.jammer[i]
                     if entity.id == data.jammerid then
                         Radio:UpdateJammerRemove(data.jammerid)
@@ -394,113 +447,63 @@ end
 function OnExitJammerZone(self)
     Radio.insideJammer = false
     Radio.insideJammerZone = 0
-    if IsJammerAllowed(self.jammerid, Radio.RadioChannel) then return end
     Radio.signalJammed = false
     Radio:SendSvelteMessage("insideJammer", false)
-    exports["pma-voice"]:setRadioChannel(Radio.RadioChannel)
+    if Radio.onRadio then
+        exports["pma-voice"]:setRadioChannel(Radio.RadioChannel)
+    end
 end
 
 function OnEnterJammer(self)
-    if not Shared.Jammer.permission or not (lib.table.contains(Shared.Jammer.permission, Radio.PlayerJob) or lib.table.contains(Shared.Jammer.permission, Radio.PlayerGang)) then
-        return
-    end
-    lib.showTextUI('[E] Konfiguruj Jammer')
     insideJammer = true
+    lib.showTextUI('[E] Konfiguruj Jammer')
     CreateThread(function()
         while insideJammer do
-            if IsControlJustPressed(0, 38) then
+            if IsControlJustReleased(0, 38) then
                 Radio:OpenJammerConfig(self.jammerid)
-                lib.hideTextUI()
             end
             Wait(5)
         end
     end)
 end
 
-function OnExitJammer()
-    lib.hideTextUI()
+function OnExitJammer(self)
     insideJammer = false
+    lib.hideTextUI()
 end
 
-function JoinRadio(channel)
-    if Radio.insideJammer and not IsJammerAllowed(Radio.insideJammerZone, channel) then
-        return Radio:Notify(locale('jammer_notify_description', channel), 10000)
-    end
-    if not channel or channel > Shared.MaxFrequency or channel < 1 then
-        return Radio:Notify(locale('invalid_notify_description', channel))
-    end
-    if channel == Radio.RadioChannel then
-        return Radio:Notify(locale('already_notify_description', channel), 10000)
-    end
-    local connectChannel = math.floor(channel)
-    if Shared.RestrictedChannels[connectChannel] then
-        local type = Shared.RestrictedChannels[connectChannel].type
-        local name = Shared.RestrictedChannels[connectChannel].name
-        if type == 'job' and lib.table.contains(name, Radio.PlayerJob) and Radio.PlayerDuty then
-            Radio:connecttoradio(channel)
-            Radio:update()
-        elseif type == 'gang' and lib.table.contains(name, Radio.PlayerGang) then
-            Radio:connecttoradio(channel)
-            Radio:update()
-        else
-            Radio:Notify(locale('restricted_notify_description', channel), 10000)
-        end
-    else
-        Radio:connecttoradio(channel)
-        Radio:update()
-    end
-end
+function JoinRadio(rchannel)
+    if not Radio.hasRadio then return end
 
-exports('JoinRadio', JoinRadio)
+    if rchannel <= 0 or rchannel > Shared.MaxFrequency then
+        Radio:Notify(locale('invalid_notify_description', rchannel))
+        return
+    end
 
-local function LeaveRadio()
-    Radio:leaveradio()
-end
+    if Radio.RadioChannel == rchannel then
+        Radio:Notify(locale('already_notify_description', rchannel))
+        return
+    end
 
-exports('LeaveRadio', LeaveRadio)
-
-lib.addKeybind({
-    name = 'radio',
-    description = 'Nacisnij = aby otworzyc radio',
-    defaultKey = 'EQUALS',
-    onPressed = function()
-        if not Radio.usingRadio then
-            if Shared.Inventory and Radio.hasRadio then
-                TriggerEvent('z_radio:client:use')
-            elseif not Shared.Inventory then
-                TriggerEvent('z_radio:client:use')
-            end
+    local intChannel = math.floor(rchannel)
+    if Shared.RestrictedChannels[intChannel] then
+        local data = Shared.RestrictedChannels[intChannel]
+        if data.type == 'job' and not lib.table.contains(data.name, Radio.PlayerJob) then
+            Radio:Notify(locale('restricted_notify_description', rchannel))
+            return
+        elseif data.type == 'gang' and not lib.table.contains(data.name, Radio.PlayerGang) then
+            Radio:Notify(locale('restricted_notify_description', rchannel))
+            return
         end
     end
-})
 
-lib.addKeybind({
-    name = '+channel',
-    description = 'Nastepny kanal radiowy',
-    defaultKey = 'PERIOD',
-    onPressed = function()
-        if not Radio.onRadio then return end
-        local currentChannel = Radio.RadioChannel
-        JoinRadio(currentChannel + 1)
-    end
-})
-
-lib.addKeybind({
-    name = '-channel',
-    description = 'Poprzedni kanal radiowy',
-    defaultKey = 'COMMA',
-    onPressed = function()
-        if not Radio.onRadio then return end
-        local currentChannel = Radio.RadioChannel
-        JoinRadio(currentChannel - 1)
-    end
-})
-
-if Shared.Battery.state then
-    CreateThread(function()
-        while true do
-            TriggerServerEvent('z_radio:server:consumeBattery', Radio.batteryData)
-            Wait(Shared.Battery.depletionTime * 60000)
+    if Radio.signalJammed and Radio.insideJammerZone > 0 then
+        if not IsJammerAllowed(Radio.insideJammerZone, rchannel) then
+            Radio:Notify(locale('jammer_notify_description', rchannel))
+            return
         end
-    end)
+    end
+
+    Radio:connecttoradio(rchannel)
+    Radio:update()
 end
