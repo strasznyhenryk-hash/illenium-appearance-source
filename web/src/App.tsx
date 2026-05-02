@@ -8,17 +8,18 @@ import { useCallback, useEffect, useState } from 'react';
 
 const defaultTheme: any = {
   id: 'default',
-  borderRadius: '4px',
+  borderRadius: '6px',
   fontColor: '255, 255, 255',
   fontColorHover: '255, 255, 255',
-  fontColorSelected: '0, 0, 0',
+  fontColorSelected: '255, 255, 255',
   fontFamily: 'Inter',
-  primaryBackground: '0, 0, 0',
-  primaryBackgroundSelected: '255, 255, 255',
+  primaryBackground: '18, 18, 20',
+  primaryBackgroundSelected: '227, 32, 59',
   secondaryBackground: '0, 0, 0',
+  accentColor: '227, 32, 59',
   scaleOnHover: false,
-  sectionFontWeight: 'normal',
-  smoothBackgroundTransition: false,
+  sectionFontWeight: '600',
+  smoothBackgroundTransition: true,
 };
 
 const App: React.FC = () => {
@@ -27,14 +28,18 @@ const App: React.FC = () => {
   const getCurrentTheme = (themeData: any) => {
     for (let index = 0; index < themeData.themes.length; index++) {
       if (themeData.themes[index].id === themeData.currentTheme) {
-        return themeData.themes[index];
+        return { ...defaultTheme, ...themeData.themes[index] };
       }
     }
+    return defaultTheme;
   };
 
   const loadTheme = useCallback(async () => {
     const themeData = await Nui.post('get_theme_configuration');
-    setCurrentTheme(getCurrentTheme(themeData));
+    const theme = getCurrentTheme(themeData);
+    if (theme) {
+      setCurrentTheme(theme);
+    }
   }, []);
 
   useEffect(() => {

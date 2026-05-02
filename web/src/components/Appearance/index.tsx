@@ -36,9 +36,28 @@ import Props from './Props';
 import Options from './Options';
 import Modal from '../Modal';
 import Tattoos from './Tattoos';
+import Gender from './Gender';
 
-import { Wrapper, Container } from './styles';
-import { ThemeContext } from 'styled-components';
+import {
+  FaUserAlt,
+  FaDna,
+  FaSmile,
+  FaTshirt,
+  FaGlasses,
+  FaPaintBrush,
+} from 'react-icons/fa';
+import { GiComb } from 'react-icons/gi';
+
+import {
+  Wrapper,
+  Header,
+  LeftNav,
+  NavItem,
+  RightPanel,
+  PanelBody,
+  IconRail,
+  Footer,
+} from './styles';
 
 if (!import.meta.env.PROD) {
   mock('appearance_get_settings', () => ({
@@ -60,8 +79,81 @@ if (!import.meta.env.PROD) {
   }));
 
   mock('appearance_get_data', () => ({
-    appearanceData: { ...APPEARANCE_INITIAL_STATE, model: 'mp_f_freemode_01' },
+    config: {
+      ped: true,
+      headBlend: true,
+      faceFeatures: true,
+      headOverlays: true,
+      components: true,
+      componentConfig: {
+        masks: true,
+        upperBody: true,
+        lowerBody: true,
+        bags: true,
+        shoes: true,
+        scarfAndChains: true,
+        shirts: true,
+        bodyArmor: true,
+        decals: true,
+        jackets: true,
+      },
+      props: true,
+      propConfig: { hats: true, glasses: true, ear: true, watches: true, bracelets: true },
+      tattoos: true,
+      enableExit: true,
+      hasTracker: false,
+      automaticFade: false,
+    },
+    appearanceData: { ...APPEARANCE_INITIAL_STATE, model: 'mp_m_freemode_01' },
   }));
+
+  mock('appearance_get_locales', () => ({
+    modal: {
+      save: { title: 'Save', description: 'Save changes?' },
+      exit: { title: 'Exit', description: 'Exit without saving?' },
+      accept: 'Accept',
+      decline: 'Decline',
+    },
+    ped: { title: 'Ped', model: 'Model' },
+    headBlend: {
+      title: 'Head Blend',
+      shape: { title: 'Shape', firstOption: 'Mother', secondOption: 'Father', mix: 'Similarity' },
+      skin: { title: 'Skin', firstOption: 'Mother', secondOption: 'Father', mix: 'Skin Color' },
+      race: { title: 'Race', shape: 'Shape', skin: 'Skin', mix: 'Mix' },
+    },
+    faceFeatures: {
+      title: 'Face Features',
+      nose: { title: 'Nose', width: 'Width', height: 'Height', size: 'Size', boneHeight: 'Bone Height', boneTwist: 'Bone Twist', peakHeight: 'Peak Height' },
+      eyebrows: { title: 'Eyebrows', height: 'Height', depth: 'Depth' },
+      cheeks: { title: 'Cheeks', boneHeight: 'Bone Height', boneWidth: 'Bone Width', width: 'Width' },
+      eyesAndMouth: { title: 'Eyes & Mouth', eyesOpening: 'Eyes Opening', lipsThickness: 'Lips Thickness' },
+      jaw: { title: 'Jaw', width: 'Width', size: 'Size' },
+      chin: { title: 'Chin', lowering: 'Lowering', length: 'Length', size: 'Size', hole: 'Hole' },
+      neck: { title: 'Neck', thickness: 'Thickness' },
+    },
+    headOverlays: {
+      title: 'Hair',
+      hair: { title: 'Hair', style: 'Style', color: 'Color', highlight: 'Highlight', fade: 'Fade', texture: 'Texture' },
+      opacity: 'Opacity', style: 'Style', color: 'Color', secondColor: 'Second Color',
+      blemishes: 'Blemishes', beard: 'Beard', eyebrows: 'Eyebrows', ageing: 'Ageing',
+      makeUp: 'Make-up', blush: 'Blush', complexion: 'Complexion', sunDamage: 'Sun Damage',
+      lipstick: 'Lipstick', moleAndFreckles: 'Moles & Freckles', chestHair: 'Chest Hair',
+      bodyBlemishes: 'Body Blemishes', eyeColor: 'Eye Color',
+    },
+    components: {
+      title: 'Clothes', drawable: 'Drawable', texture: 'Texture',
+      mask: 'Mask', upperBody: 'Upper Body', lowerBody: 'Lower Body', bags: 'Bags',
+      shoes: 'Shoes', scarfAndChains: 'Scarf & Chains', shirt: 'Shirt',
+      bodyArmor: 'Body Armor', decals: 'Decals', jackets: 'Jackets', head: 'Head',
+    },
+    props: {
+      title: 'Accessories', drawable: 'Drawable', texture: 'Texture',
+      hats: 'Hats', glasses: 'Glasses', ear: 'Ears', watches: 'Watches', bracelets: 'Bracelets',
+    },
+    tattoos: { title: 'Tattoos', items: {}, apply: 'Apply', delete: 'Delete', deleteAll: 'Delete All', opacity: 'Opacity' },
+  }));
+
+  mock('get_theme_configuration', () => ({ themes: [], currentTheme: 'default' }));
 
   mock('appearance_change_model', () => SETTINGS_INITIAL_STATE);
 
@@ -83,6 +175,8 @@ const Appearance = () => {
 
   const [saveModal, setSaveModal] = useState(false);
   const [exitModal, setExitModal] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<string>('ped');
 
   const { display, setDisplay, locales, setLocales } = useNuiState();
 
@@ -546,6 +640,41 @@ const Appearance = () => {
     return null;
   }
 
+  const tabs = [
+    { id: 'ped', label: locales.ped?.title || 'Ped', icon: <FaUserAlt size={16} />, enabled: config.ped },
+    {
+      id: 'dna',
+      label: locales.headBlend?.title || 'DNA',
+      icon: <FaDna size={18} />,
+      enabled: isPedFreemodeModel && config.headBlend,
+    },
+    {
+      id: 'face',
+      label: locales.faceFeatures?.title || 'Face',
+      icon: <FaSmile size={18} />,
+      enabled: isPedFreemodeModel && config.faceFeatures,
+    },
+    { id: 'hair', label: locales.headOverlays?.title || 'Hair', icon: <GiComb size={18} />, enabled: config.headOverlays },
+    { id: 'clothes', label: locales.components?.title || 'Clothes', icon: <FaTshirt size={16} />, enabled: config.components },
+    { id: 'accessories', label: locales.props?.title || 'Accessories', icon: <FaGlasses size={18} />, enabled: config.props },
+    {
+      id: 'tattoos',
+      label: locales.tattoos?.title || 'Tattoos',
+      icon: <FaPaintBrush size={16} />,
+      enabled: isPedFreemodeModel && config.tattoos,
+    },
+  ];
+
+  const visibleTabs = tabs.filter(t => t.enabled);
+  const currentTab = visibleTabs.find(t => t.id === activeTab)?.id ?? visibleTabs[0]?.id ?? 'ped';
+
+  const handleGenderChange = (male: boolean) => {
+    const newModel = male ? 'mp_m_freemode_01' : 'mp_f_freemode_01';
+    if (data && newModel !== data.model) {
+      handleModelChange(newModel);
+    }
+  };
+
   return (
     <>
       {wrapperTransition.map(
@@ -553,110 +682,164 @@ const Appearance = () => {
           item && (
             <animated.div key={key} style={style}>
               <Wrapper>
-                <Container>
-                  {config.ped && (
-                    <Ped
-                      settings={appearanceSettings.ped}
-                      storedData={storedData.model}
-                      data={data.model}
-                      handleModelChange={handleModelChange}
-                    />
-                  )}
-                  {appearanceSettings && (
-                    <>
-                      {isPedFreemodeModel && config.headBlend && (
+                <Header>
+                  <h1>
+                    KREATOR
+                    <span className="accent">POSTACI</span>
+                  </h1>
+                  <p>Dostosuj swoją postać. Użyj menu, aby przechodzić między opcjami.</p>
+                </Header>
+
+                <LeftNav>
+                  {visibleTabs.map(t => (
+                    <NavItem
+                      key={t.id}
+                      active={t.id === currentTab}
+                      onClick={() => setActiveTab(t.id)}
+                      type="button"
+                    >
+                      <span className="icon">{t.icon}</span>
+                      <span>{t.label}</span>
+                    </NavItem>
+                  ))}
+                </LeftNav>
+
+                <IconRail>
+                  <Options
+                    camera={camera}
+                    rotate={rotate}
+                    clothes={clothes}
+                    handleSetClothes={handleSetClothes}
+                    handleSetCamera={handleSetCamera}
+                    handleTurnAround={handleTurnAround}
+                    handleRotateLeft={handleRotateLeft}
+                    handleRotateRight={handleRotateRight}
+                    handleSave={handleSaveModal}
+                    handleExit={handleExitModal}
+                    enableExit={config.enableExit}
+                  />
+                </IconRail>
+
+                <RightPanel>
+                  <PanelBody>
+                    {currentTab === 'ped' && config.ped && (
+                      <Ped
+                        settings={appearanceSettings.ped}
+                        storedData={storedData.model}
+                        data={data.model}
+                        handleModelChange={handleModelChange}
+                      />
+                    )}
+
+                    {currentTab === 'dna' && isPedFreemodeModel && config.headBlend && (
+                      <>
+                        <Gender isMale={!!isPedMale} onChange={handleGenderChange} />
                         <HeadBlend
                           settings={appearanceSettings.headBlend}
                           storedData={storedData.headBlend}
                           data={data.headBlend}
                           handleHeadBlendChange={handleHeadBlendChange}
                         />
-                      )}
-                      {isPedFreemodeModel && config.faceFeatures && (
-                        <FaceFeatures
-                          settings={appearanceSettings.faceFeatures}
-                          storedData={storedData.faceFeatures}
-                          data={data.faceFeatures}
-                          handleFaceFeatureChange={handleFaceFeatureChange}
-                        />
-                      )}
-                      {config.headOverlays && (
-                        <HeadOverlays
-                          settings={{
-                            hair: appearanceSettings.hair,
-                            headOverlays: appearanceSettings.headOverlays,
-                            eyeColor: appearanceSettings.eyeColor,
-                            fade: appearanceSettings.tattoos.items['ZONE_HAIR']
-                          }}
-                          storedData={{
-                            hair: storedData.hair,
-                            headOverlays: storedData.headOverlays,
-                            eyeColor: storedData.eyeColor,
-                            fade: storedData.tattoos?.ZONE_HAIR?.length > 0 ? storedData.tattoos.ZONE_HAIR[0] : null
-                          }}
-                          data={{
-                            hair: data.hair,
-                            headOverlays: data.headOverlays,
-                            eyeColor: data.eyeColor,
-                            fade: data.tattoos?.ZONE_HAIR?.length > 0 ? data.tattoos.ZONE_HAIR[0] : null
-                          }}
-                          isPedFreemodeModel={isPedFreemodeModel}
-                          handleHairChange={handleHairChange}
-                          handleHeadOverlayChange={handleHeadOverlayChange}
-                          handleEyeColorChange={handleEyeColorChange}
-                          handleChangeFade={handleChangeFade}
-                          automaticFade={config.automaticFade}
-                        />
-                      )}
-                    </>
-                  )}
-                  {config.components && (
-                    <Components
-                      settings={appearanceSettings.components}
-                      data={data.components}
-                      storedData={storedData.components}
-                      handleComponentDrawableChange={handleComponentDrawableChange}
-                      handleComponentTextureChange={handleComponentTextureChange}
-                      componentConfig={config.componentConfig}
-                      hasTracker={config.hasTracker}
-                      isPedFreemodeModel={isPedFreemodeModel}
-                    />
-                  )}
-                  {config.props && (
-                    <Props
-                      settings={appearanceSettings.props}
-                      data={data.props}
-                      storedData={storedData.props}
-                      handlePropDrawableChange={handlePropDrawableChange}
-                      handlePropTextureChange={handlePropTextureChange}
-                      propConfig={config.propConfig}
-                    />
-                  )}
-                  {isPedFreemodeModel && config.tattoos && (
-                    <Tattoos
-                      settings={filterTattoos(appearanceSettings.tattoos)}
-                      data={data.tattoos}
-                      storedData={storedData.tattoos}
-                      handleApplyTattoo={handleApplyTattoo}
-                      handlePreviewTattoo={handlePreviewTattoo}
-                      handleDeleteTattoo={handleDeleteTattoo}
-                      handleClearTattoos={handleClearTattoos}
-                    />
-                  )}
-                </Container>
-                <Options
-                  camera={camera}
-                  rotate={rotate}
-                  clothes={clothes}
-                  handleSetClothes={handleSetClothes}
-                  handleSetCamera={handleSetCamera}
-                  handleTurnAround={handleTurnAround}
-                  handleRotateLeft={handleRotateLeft}
-                  handleRotateRight={handleRotateRight}
-                  handleSave={handleSaveModal}
-                  handleExit={handleExitModal}
-                  enableExit={config.enableExit}
-                />
+                      </>
+                    )}
+
+                    {currentTab === 'face' && isPedFreemodeModel && config.faceFeatures && (
+                      <FaceFeatures
+                        settings={appearanceSettings.faceFeatures}
+                        storedData={storedData.faceFeatures}
+                        data={data.faceFeatures}
+                        handleFaceFeatureChange={handleFaceFeatureChange}
+                      />
+                    )}
+
+                    {currentTab === 'hair' && config.headOverlays && (
+                      <HeadOverlays
+                        settings={{
+                          hair: appearanceSettings.hair,
+                          headOverlays: appearanceSettings.headOverlays,
+                          eyeColor: appearanceSettings.eyeColor,
+                          fade: appearanceSettings.tattoos.items['ZONE_HAIR'],
+                        }}
+                        storedData={{
+                          hair: storedData.hair,
+                          headOverlays: storedData.headOverlays,
+                          eyeColor: storedData.eyeColor,
+                          fade:
+                            storedData.tattoos?.ZONE_HAIR?.length > 0
+                              ? storedData.tattoos.ZONE_HAIR[0]
+                              : null,
+                        }}
+                        data={{
+                          hair: data.hair,
+                          headOverlays: data.headOverlays,
+                          eyeColor: data.eyeColor,
+                          fade:
+                            data.tattoos?.ZONE_HAIR?.length > 0
+                              ? data.tattoos.ZONE_HAIR[0]
+                              : null,
+                        }}
+                        isPedFreemodeModel={isPedFreemodeModel}
+                        handleHairChange={handleHairChange}
+                        handleHeadOverlayChange={handleHeadOverlayChange}
+                        handleEyeColorChange={handleEyeColorChange}
+                        handleChangeFade={handleChangeFade}
+                        automaticFade={config.automaticFade}
+                      />
+                    )}
+
+                    {currentTab === 'clothes' && config.components && (
+                      <Components
+                        settings={appearanceSettings.components}
+                        data={data.components}
+                        storedData={storedData.components}
+                        handleComponentDrawableChange={handleComponentDrawableChange}
+                        handleComponentTextureChange={handleComponentTextureChange}
+                        componentConfig={config.componentConfig}
+                        hasTracker={config.hasTracker}
+                        isPedFreemodeModel={isPedFreemodeModel}
+                      />
+                    )}
+
+                    {currentTab === 'accessories' && config.props && (
+                      <Props
+                        settings={appearanceSettings.props}
+                        data={data.props}
+                        storedData={storedData.props}
+                        handlePropDrawableChange={handlePropDrawableChange}
+                        handlePropTextureChange={handlePropTextureChange}
+                        propConfig={config.propConfig}
+                      />
+                    )}
+
+                    {currentTab === 'tattoos' && isPedFreemodeModel && config.tattoos && (
+                      <Tattoos
+                        settings={filterTattoos(appearanceSettings.tattoos)}
+                        data={data.tattoos}
+                        storedData={storedData.tattoos}
+                        handleApplyTattoo={handleApplyTattoo}
+                        handlePreviewTattoo={handlePreviewTattoo}
+                        handleDeleteTattoo={handleDeleteTattoo}
+                        handleClearTattoos={handleClearTattoos}
+                      />
+                    )}
+                  </PanelBody>
+                </RightPanel>
+
+                <Footer>
+                  <div className="help">
+                    <div className="help-item">
+                      <span className="kbd">A</span>
+                      <span className="kbd">D</span>
+                      <span>Obróć postać</span>
+                    </div>
+                    <div className="help-item">
+                      <span>Użyj menu po prawej dla więcej opcji</span>
+                    </div>
+                  </div>
+                  <div className="brand">
+                    <span className="accent">FiveM</span>
+                  </div>
+                </Footer>
               </Wrapper>
             </animated.div>
           ),
